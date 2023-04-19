@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto2',
   serialized_options=None,
-  serialized_pb=_b('\n\tU2A.proto\"-\n\nUPickupRes\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"+\n\x08UArrived\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"/\n\nUDelivered\x12\x11\n\tpackageid\x18\x01 \x02(\x03\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"3\n\x06UError\x12\x0c\n\x04\x63ode\x18\x01 \x02(\x05\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"\x90\x01\n\x08UCommand\x12\x1f\n\nupickupRes\x18\x01 \x03(\x0b\x32\x0b.UPickupRes\x12\x1b\n\x08uarrived\x18\x02 \x03(\x0b\x32\t.UArrived\x12\x1f\n\nudelivered\x18\x03 \x03(\x0b\x32\x0b.UDelivered\x12\x17\n\x06uerror\x18\x04 \x03(\x0b\x32\x07.UError\x12\x0c\n\x04\x61\x63ks\x18\x05 \x03(\x03')
+  serialized_pb=_b('\n\tU2A.proto\"-\n\nUPickupRes\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"+\n\x08UArrived\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"/\n\nUDelivered\x12\x11\n\tpackageid\x18\x01 \x02(\x03\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"3\n\x06UError\x12\x0c\n\x04\x63ode\x18\x01 \x02(\x05\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"\x90\x01\n\x08UCommand\x12\x1f\n\nupickupRes\x18\x01 \x03(\x0b\x32\x0b.UPickupRes\x12\x1b\n\x08uarrived\x18\x02 \x03(\x0b\x32\t.UArrived\x12\x1f\n\nudelivered\x18\x03 \x03(\x0b\x32\x0b.UDelivered\x12\x17\n\x06uerror\x18\x04 \x03(\x0b\x32\x07.UError\x12\x0c\n\x04\x61\x63ks\x18\x05 \x03(\x03\")\n\nAPickupReq\x12\x0b\n\x03hid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"p\n\x05\x41Load\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0b\n\x03hid\x18\x02 \x02(\x05\x12\x11\n\tpackageid\x18\x03 \x02(\x03\x12\x12\n\nlocation_x\x18\x04 \x02(\x05\x12\x12\n\nlocation_y\x18\x05 \x02(\x05\x12\x0e\n\x06seqnum\x18\x06 \x02(\x03\"0\n\rALoadComplete\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"3\n\x06\x41\x45rror\x12\x0c\n\x04\x63ode\x18\x01 \x02(\x05\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"\x84\x01\n\x08\x41\x43ommand\x12\x1c\n\x07pickups\x18\x01 \x03(\x0b\x32\x0b.APickupReq\x12\x16\n\x06toload\x18\x02 \x03(\x0b\x32\x06.ALoad\x12\x1c\n\x04\x63omp\x18\x03 \x03(\x0b\x32\x0e.ALoadComplete\x12\x16\n\x05\x65rror\x18\x04 \x03(\x0b\x32\x07.AError\x12\x0c\n\x04\x61\x63ks\x18\x05 \x03(\x03')
 )
 
 
@@ -242,15 +242,270 @@ _UCOMMAND = _descriptor.Descriptor(
   serialized_end=352,
 )
 
+
+_APICKUPREQ = _descriptor.Descriptor(
+  name='APickupReq',
+  full_name='APickupReq',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='hid', full_name='APickupReq.hid', index=0,
+      number=1, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='seqnum', full_name='APickupReq.seqnum', index=1,
+      number=2, type=3, cpp_type=2, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=354,
+  serialized_end=395,
+)
+
+
+_ALOAD = _descriptor.Descriptor(
+  name='ALoad',
+  full_name='ALoad',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='truckid', full_name='ALoad.truckid', index=0,
+      number=1, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='hid', full_name='ALoad.hid', index=1,
+      number=2, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='packageid', full_name='ALoad.packageid', index=2,
+      number=3, type=3, cpp_type=2, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='location_x', full_name='ALoad.location_x', index=3,
+      number=4, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='location_y', full_name='ALoad.location_y', index=4,
+      number=5, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='seqnum', full_name='ALoad.seqnum', index=5,
+      number=6, type=3, cpp_type=2, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=397,
+  serialized_end=509,
+)
+
+
+_ALOADCOMPLETE = _descriptor.Descriptor(
+  name='ALoadComplete',
+  full_name='ALoadComplete',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='truckid', full_name='ALoadComplete.truckid', index=0,
+      number=1, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='seqnum', full_name='ALoadComplete.seqnum', index=1,
+      number=2, type=3, cpp_type=2, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=511,
+  serialized_end=559,
+)
+
+
+_AERROR = _descriptor.Descriptor(
+  name='AError',
+  full_name='AError',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='code', full_name='AError.code', index=0,
+      number=1, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='msg', full_name='AError.msg', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='seqnum', full_name='AError.seqnum', index=2,
+      number=3, type=3, cpp_type=2, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=561,
+  serialized_end=612,
+)
+
+
+_ACOMMAND = _descriptor.Descriptor(
+  name='ACommand',
+  full_name='ACommand',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='pickups', full_name='ACommand.pickups', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='toload', full_name='ACommand.toload', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='comp', full_name='ACommand.comp', index=2,
+      number=3, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='error', full_name='ACommand.error', index=3,
+      number=4, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='acks', full_name='ACommand.acks', index=4,
+      number=5, type=3, cpp_type=2, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=615,
+  serialized_end=747,
+)
+
 _UCOMMAND.fields_by_name['upickupRes'].message_type = _UPICKUPRES
 _UCOMMAND.fields_by_name['uarrived'].message_type = _UARRIVED
 _UCOMMAND.fields_by_name['udelivered'].message_type = _UDELIVERED
 _UCOMMAND.fields_by_name['uerror'].message_type = _UERROR
+_ACOMMAND.fields_by_name['pickups'].message_type = _APICKUPREQ
+_ACOMMAND.fields_by_name['toload'].message_type = _ALOAD
+_ACOMMAND.fields_by_name['comp'].message_type = _ALOADCOMPLETE
+_ACOMMAND.fields_by_name['error'].message_type = _AERROR
 DESCRIPTOR.message_types_by_name['UPickupRes'] = _UPICKUPRES
 DESCRIPTOR.message_types_by_name['UArrived'] = _UARRIVED
 DESCRIPTOR.message_types_by_name['UDelivered'] = _UDELIVERED
 DESCRIPTOR.message_types_by_name['UError'] = _UERROR
 DESCRIPTOR.message_types_by_name['UCommand'] = _UCOMMAND
+DESCRIPTOR.message_types_by_name['APickupReq'] = _APICKUPREQ
+DESCRIPTOR.message_types_by_name['ALoad'] = _ALOAD
+DESCRIPTOR.message_types_by_name['ALoadComplete'] = _ALOADCOMPLETE
+DESCRIPTOR.message_types_by_name['AError'] = _AERROR
+DESCRIPTOR.message_types_by_name['ACommand'] = _ACOMMAND
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 UPickupRes = _reflection.GeneratedProtocolMessageType('UPickupRes', (_message.Message,), dict(
@@ -287,6 +542,41 @@ UCommand = _reflection.GeneratedProtocolMessageType('UCommand', (_message.Messag
   # @@protoc_insertion_point(class_scope:UCommand)
   ))
 _sym_db.RegisterMessage(UCommand)
+
+APickupReq = _reflection.GeneratedProtocolMessageType('APickupReq', (_message.Message,), dict(
+  DESCRIPTOR = _APICKUPREQ,
+  __module__ = 'U2A_pb2'
+  # @@protoc_insertion_point(class_scope:APickupReq)
+  ))
+_sym_db.RegisterMessage(APickupReq)
+
+ALoad = _reflection.GeneratedProtocolMessageType('ALoad', (_message.Message,), dict(
+  DESCRIPTOR = _ALOAD,
+  __module__ = 'U2A_pb2'
+  # @@protoc_insertion_point(class_scope:ALoad)
+  ))
+_sym_db.RegisterMessage(ALoad)
+
+ALoadComplete = _reflection.GeneratedProtocolMessageType('ALoadComplete', (_message.Message,), dict(
+  DESCRIPTOR = _ALOADCOMPLETE,
+  __module__ = 'U2A_pb2'
+  # @@protoc_insertion_point(class_scope:ALoadComplete)
+  ))
+_sym_db.RegisterMessage(ALoadComplete)
+
+AError = _reflection.GeneratedProtocolMessageType('AError', (_message.Message,), dict(
+  DESCRIPTOR = _AERROR,
+  __module__ = 'U2A_pb2'
+  # @@protoc_insertion_point(class_scope:AError)
+  ))
+_sym_db.RegisterMessage(AError)
+
+ACommand = _reflection.GeneratedProtocolMessageType('ACommand', (_message.Message,), dict(
+  DESCRIPTOR = _ACOMMAND,
+  __module__ = 'U2A_pb2'
+  # @@protoc_insertion_point(class_scope:ACommand)
+  ))
+_sym_db.RegisterMessage(ACommand)
 
 
 # @@protoc_insertion_point(module_scope)
