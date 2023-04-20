@@ -5,14 +5,13 @@ from sqlalchemy.orm import declarative_base
 Base = declarative_base()
 
 class TruckStatusEnum(enum.Enum):
-    open = 1
-    canceled = 2
-    executed = 3
+    idle = 1
+    arriveWH = 2
+    delivering = 3
 
 class PackageStatusEnum(enum.Enum):
-    open = 1
-    canceled = 2
-    executed = 3
+    delivering = 1
+    complete = 2
 
 class Truck(Base):
     __tablename__ = 'truck'
@@ -36,13 +35,13 @@ class Package(Base):
     location_x = Column(Integer, nullable=True, default=None)
     location_y = Column(Integer, nullable=True, default=None)
     truck_id = Column(Integer, ForeignKey('truck.truck_id',ondelete="SET NULL", onupdate="CASCADE"))
+    time = Column(BIGINT)
     email = Column(String(256))
-    item_id = Column(Integer, primary_key = True)
+    item_id = Column(Integer)
     item_num = Column(Integer)
     item_name = Column(String(256))
     item_desc = Column(String(512))
 
-    
     def dto(self):
         ans = dict()
         ans['package_id'] = self.package_id
