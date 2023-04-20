@@ -18,12 +18,13 @@ worldid = 0
 
 world_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 world_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-ip_port = ('vcm-31032.vm.duke.edu', 12345)
+ip_port = ('0.0.0.0', 12345)
 try:
     world_socket.connect(ip_port)
     print("Socket Connected")
-except socket.error:
-    print("Caught exception socket.error")
+except:
+    print("error")
+    exit
 
 uconnect = world_ups_pb2.UConnect()
 uconnect.isAmazon = False
