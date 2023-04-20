@@ -4,7 +4,7 @@ import world_ups_pb2, U2A_pb2
 import sys
 import threading
 import select
-from mesg import *
+from msg import *
 import smtplib
 from email.mime.text import MIMEText
 import time
