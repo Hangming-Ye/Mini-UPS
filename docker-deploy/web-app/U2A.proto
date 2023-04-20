@@ -32,12 +32,19 @@ message UCommand {
 	repeated UDelivered udelivered = 3;
 	repeated UError uerror = 4;
 	repeated int64 acks = 5;
-   }
+}
 
 //pick up request from amazon
 message APickupReq{
 	required int32 hid = 1;
 	required int64 seqnum = 2;
+}
+
+message AItem{
+	required int32 itemid = 1;
+	required int32 num = 2;
+	required string name = 3;
+	required string desc = 4;
 }
 
 //Amazon load request for a specific package
@@ -48,6 +55,8 @@ message ALoad{
 	required int32 location_x = 4;
 	required int32 location_y = 5;
 	required int64 seqnum = 6;
+	required string email = 7;
+	repeated AItem itemInfo = 8;
 }
 
 //Amazon Complete Load
