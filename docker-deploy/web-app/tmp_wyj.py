@@ -8,6 +8,8 @@ from msg import *
 import smtplib
 from email.mime.text import MIMEText
 import time
+from db import *
+from orm import *
 
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
@@ -40,8 +42,9 @@ def connectServer():
 def connectWorld(world_socket, truck_num):
     uconnect = world_ups_pb2.UConnect()
     uconnect.isAmazon = False
-    
+
     #connect to db and initiate truck
+    
 
     #send UConnect to world
     send_msg(world_socket, uconnect.SerializeToString())
@@ -59,29 +62,78 @@ def connectWorld(world_socket, truck_num):
 
     return worldid
 
+
 '''
-@Desc   :Send UGoPickup command to the world
+@Desc   :Assign a truck to the warehouse, send UGoPickup command to the world, change the status of this truck
 @Arg    :world_socket, truckid, warehouseid, seqnum
-@Return :None
+@Return :truckid
 '''
-def send_UGoPickup(world_socket, truckid, whid, seq):
+def send_UGoPickup(world_socket, whid, seq):
     ucommands = world_ups_pb2.UCommands()
     ucommands.disconnect = False
     pickup = ucommands.pickups.add()
-    pickup.truckid = truckid
     pickup.whid = whid
     pickup.seqnum = seq
 
+    #connect to db 
+    #fetch the first truckid with status = idle
+    #update the status of this truck to arriveWH
+    
+    pickup.truckid = truckid
+
     #send UCommand to the world
-    while True:
-        send_msg(world_socket, ucommands.SerializeToString())
-        print("Sent UCommand go pick up")
-        #debug
+    send_msg(world_socket, ucommands.SerializeToString())
+    print("Sent UCommand go pick up")
+    #handling message lost
+    '''
         time.sleep(4)
         print(ack_set)
         if seq in ack_set:
             print("Sent UCommand go pick up, already received by world")
-        else:
-            print(" Sent UCommand go pick up, not received by world " + str(seq))
+            break
+        print(" Sent UCommand go pick up, not received by world " + str(seq))
+    '''
+    return truckid
 
+def send_UGoDeliver(world_socket, truckid, seq):
+    ucommands = world_ups_pb2.UCommands()
+    ucommands.disconnect = False
+    delivery = ucommands.deliveries.add()
+    delivery.truckid = truckid
+    delivery.seqnum = seq
+     # Connect to database 
+    conn = connectDB()
+    cur = conn.cursor()
 
+    # Find all the packages which status are 'loaded' and truckid is truck_id 
+    cur.execute("select packageid, location_x, location_y from package where truckid='" + str(truckid) + "' and status='loaded'")
+    packages = cur.fetchall()
+
+    # Change the status of truck from 'arriveWH' to 'delivering'
+
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    for package in packages:
+        delivery_location = delivery.packages.add()
+        delivery_location.packageid = package[0]
+        delivery_location.x = package[1]
+        delivery_location.y = package[2]
+    
+    print("Finished writing UGoDelivery of Ucommand")
+
+    #send UCammand to world
+    send_msg(world_socket, ucommands.SerializeToString())
+    print("Sent UCommand go delivery")
+    #handling message lost
+    """
+        time.sleep(4)
+        if seq in ack_set:
+            print("Sent UCommand go delivery, already recceived by world")
+            break
+        print("Sent UCommand go delivery, not recceived by world " + str(seq))
+    """
+
+def send_UQuery(world_socket, truckid, whid, seq):
+    print(truckid)
