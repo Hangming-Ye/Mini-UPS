@@ -31,7 +31,6 @@ message UCommand {
 	repeated UArrived uarrived = 2;
 	repeated UDelivered udelivered = 3;
 	repeated UError uerror = 4;
-	repeated int64 acks = 5;
 }
 
 //pick up request from amazon
@@ -78,5 +77,4 @@ message ACommand {
   repeated ALoad toload = 2; 
   repeated ALoadComplete comp = 3;
   repeated AError error = 4;
-  repeated int64 acks =5;
 }

@@ -15,14 +15,13 @@ def send_msg(socketfd, msg):
 def recv_msg(socket):
     var_int_buff = []
     while True:
-        try:
-            buf = socket.recv(1)
-            var_int_buff += buf
-            msg_len, new_pos = _DecodeVarint32(var_int_buff, 0)
-            if new_pos != 0:
-                break
-        except:
-            whole_message = []
-            return whole_message
+        print("$$$$")
+        buf = socket.recv(1)
+        print("^^^^^")
+        var_int_buff += buf
+        msg_len, new_pos = _DecodeVarint32(var_int_buff, 0)
+        if new_pos != 0:
+            break
+    print(msg_len)
     whole_message = socket.recv(msg_len)
     return whole_message
