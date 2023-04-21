@@ -35,7 +35,7 @@ def connectServer():
     return world_socket
 
 '''
-@Desc   :Connect to the world
+@Desc   :Connect to the world and initialize trucks
 @Arg    :world_socket, Truck Number
 @Return :worldid
 '''
@@ -68,15 +68,25 @@ def connectWorld(world_socket, truck_num):
 
     return worldid
 
-'''
-@Desc   : connect to world with specific world_id
-@Arg    :
-@Return :
-'''
+def reconnect_to_world(world_socket, world_id):
+    uconnect = world_ups_pb2.UConnect()
+    uconnect.isAmazon = False
+    uconnect.worldid = world_id
 
+    #send UConnect to world
+    send_msg(world_socket, uconnect)
+    print("Sent UConnect")
+
+    #receive UConnected from world
+    received = recv_msg(world_socket)
+
+    uconnected = world_ups_pb2.UConnected()
+    uconnected.ParseFromString(received)
+
+    print("Received MSG: " + uconnected.result)
 
 '''
-@Desc   :Assign a truck to the warehouse, send UGoPickup command to the world, change the status of this truck
+@Desc   :Assign a truck to the warehouse and tell the world to send this truck to the wh
 @Arg    :world_socket, truckid, warehouseid, seqnum
 @Return :truckid
 '''
@@ -88,14 +98,20 @@ def send_UGoPickup(world_socket, whid, seq):
     pickup.seqnum = seq
 
     #connect to db 
+    engine = connectDB()
+    session = getSession(engine)
     #fetch the first truckid with status = idle
-    #update the status of this truck to arriveWH
-    
+    truck = session.query(Truck).filter_by(status=1).first()
+    truckid = truck.truck_id
     pickup.truckid = truckid
+    #update the status of this truck to driveWH
+    truck.status = 2
+    session.commit()
+    session.close()
 
     #send UCommand to the world
-    send_msg(world_socket, ucommands.SerializeToString())
-    print("Sent UCommand go pick up")
+    send_msg(world_socket, ucommands)
+    print("Sent UCommand UGoPickup")
     #handling message lost
     '''
         time.sleep(4)
@@ -107,6 +123,11 @@ def send_UGoPickup(world_socket, whid, seq):
     '''
     return truckid
 
+'''
+@Desc   :Tell the world to let the truck deliver the packages
+@Arg    :world_socket, truckid, seq
+@Return :None
+'''
 def send_UGoDeliver(world_socket, truckid, seq):
     ucommands = world_ups_pb2.UCommands()
     ucommands.disconnect = False
@@ -114,29 +135,29 @@ def send_UGoDeliver(world_socket, truckid, seq):
     delivery.truckid = truckid
     delivery.seqnum = seq
      # Connect to database 
-    conn = connectDB()
-    cur = conn.cursor()
+    engine = connectDB()
+    session = getSession(engine)
+    # Find all the packages which status are 'loaded' and truck_id is truckid, change status to 'delivering'
+    packages = session.query(Package).filter_by(status=1, truck_id=truckid)
+    for package in packages.all():
+        package.status = 2
+    session.commit()
+    # Change this truck from 'arriveWH' to 'delivering'
+    truck = session.query(Truck).filter_by(truck_id=truckid)
+    truck.status = 4
+    session.commit()
 
-    # Find all the packages which status are 'loaded' and truckid is truck_id 
-    cur.execute("select packageid, location_x, location_y from package where truckid='" + str(truckid) + "' and status='loaded'")
-    packages = cur.fetchall()
-
-    # Change the status of truck from 'arriveWH' to 'delivering'
-
-    conn.commit()
-    cur.close()
-    conn.close()
-
-    for package in packages:
+    for package in packages.all():
         delivery_location = delivery.packages.add()
-        delivery_location.packageid = package[0]
-        delivery_location.x = package[1]
-        delivery_location.y = package[2]
-    
+        delivery_location.packageid = package.package_id
+        delivery_location.x = package.location_x
+        delivery_location.y = package.location_y
+
+    session.close()
     print("Finished writing UGoDelivery of Ucommand")
 
     #send UCammand to world
-    send_msg(world_socket, ucommands.SerializeToString())
+    send_msg(world_socket, ucommands)
     print("Sent UCommand go delivery")
     #handling message lost
     """
@@ -147,5 +168,16 @@ def send_UGoDeliver(world_socket, truckid, seq):
         print("Sent UCommand go delivery, not recceived by world " + str(seq))
     """
 
-def send_UQuery(world_socket, truckid, whid, seq):
-    print(truckid)
+'''
+@Desc   :Check where the truck is
+@Arg    :world_socket, truckid, seq
+@Return :None
+'''
+def send_UQuery(world_socket, truckid, seq):
+    ucommands = world_ups_pb2.UCommands()
+    ucommands.disconnect = False
+    query = ucommands.queries.add()
+    query.truckid = truckid
+    query.seqnum = seq
+    send_msg(world_socket, ucommands)
+    print("Sent UCommand UQuery")
