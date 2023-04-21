@@ -28,3 +28,14 @@ def recv_msg(socket):
             return whole_message
     whole_message = socket.recv(msg_len)
     return whole_message
+
+def connectToServer(ip, port):
+        fd = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        fd.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            fd.connect((ip, port))
+            print("Connection established to ", ip, "port", port)
+        except:
+            print("Connection failed to ", ip, "port", port)
+            exit(0)
+        return fd

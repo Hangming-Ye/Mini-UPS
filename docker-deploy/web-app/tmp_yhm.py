@@ -5,13 +5,21 @@ import world_ups_pb2 as W2P
 import U2A_pb2 as U2A
 from tmp_wyj import *
 
-def parseWResp(fd):
-    msg = recv_msg(fd)
+'''
+@Desc   : parse the message from UPS
+@Arg    : Byte UResponses message
+@Return : proto object UResponses message
+'''
+def parseWResp(msg):
     worldResp = W2P.UResponses()
     worldResp.ParseFromString(msg)
     return worldResp
 
-
+'''
+@Desc   :handle each command in the worldResp
+@Arg    :
+@Return :
+'''
 def handlewResp(worldResp, fdW, fdA):
     for completion in worldResp.completions:
         handleUFinished(completion, fdW, fdA)
@@ -83,5 +91,6 @@ if __name__ == "__main__":
     pickupReq.whid = 1
     pickupReq.seqnum = 2
     send_msg(fdW, ucommand)
-    resp = parseWResp(fdW)
+    msg = recv_msg(fdW)
+    resp = parseWResp(msg)
     handlewResp(resp, fdW, None)
