@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, inspect
-from sqlalchemy.orm import Session, sessionmaker, declarative_base
-import psycopg2
+from sqlalchemy.orm import sessionmaker
 from orm import *
 
 def connectDB():
@@ -15,12 +14,10 @@ def dropAllTable(engine):
 def getSession(engine):
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
-    
     return session, engine
 
 def initDB():
     engine = connectDB()
-    dropAllTable(engine)
     insp = inspect(engine)
     if not (insp.has_table("truck") and insp.has_table("package")):
         dropAllTable(engine)

@@ -6,9 +6,7 @@ import U2A_pb2 as U2A
 from tmp_wyj import *
 
 def parseWResp(fd):
-    print("#########")
     msg = recv_msg(fd)
-    print("@@@@@@@@@@@@@@@@@@@")
     worldResp = W2P.UResponses()
     worldResp.ParseFromString(msg)
     return worldResp
@@ -61,7 +59,7 @@ def myConnectWorld(world_socket, truck_num):
         y = 0
         truck_to_add.x = x
         truck_to_add.y = y
-    send_msg(world_socket, uconnect.SerializeToString())
+    send_msg(world_socket, uconnect)
     print("Sent UConnect")
 
     #receive UConnected from world
@@ -84,7 +82,6 @@ if __name__ == "__main__":
     pickupReq.truckid = 1
     pickupReq.whid = 1
     pickupReq.seqnum = 2
-    send_msg(fdW, ucommand.SerializeToString())
-    print("send!!!")
+    send_msg(fdW, ucommand)
     resp = parseWResp(fdW)
     handlewResp(resp, fdW, None)

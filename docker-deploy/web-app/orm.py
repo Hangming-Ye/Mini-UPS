@@ -6,12 +6,14 @@ Base = declarative_base()
 
 class TruckStatusEnum(enum.Enum):
     idle = 1
-    arriveWH = 2
-    delivering = 3
+    driveWH = 2
+    arriveWH = 3
+    delivering = 4
 
 class PackageStatusEnum(enum.Enum):
-    delivering = 1
-    complete = 2
+    loaded = 1
+    delivering = 2
+    complete = 3
 
 class Truck(Base):
     __tablename__ = 'truck'

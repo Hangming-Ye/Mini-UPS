@@ -44,10 +44,16 @@ def connectWorld(world_socket, truck_num):
     uconnect.isAmazon = False
 
     #connect to db and initiate truck
-    
+    for i in range(truck_num):
+        truck_to_add = uconnect.trucks.add()
+        truck_to_add.id = i + 1
+        x = 0
+        y = 0
+        truck_to_add.x = x
+        truck_to_add.y = y
 
     #send UConnect to world
-    send_msg(world_socket, uconnect.SerializeToString())
+    send_msg(world_socket, uconnect)
     print("Sent UConnect")
 
     #receive UConnected from world
@@ -61,6 +67,12 @@ def connectWorld(world_socket, truck_num):
     print("world id is " + str(worldid))
 
     return worldid
+
+'''
+@Desc   : connect to world with specific world_id
+@Arg    :
+@Return :
+'''
 
 
 '''
