@@ -9,7 +9,6 @@ from orm import *
 import multiprocessing as MP
 from AProtoUtil import *
 from UProtoUtil import *
-import Queue
 
 WORLD_PORT = 12345
 AMZ_PORT = 11111
@@ -33,7 +32,7 @@ def server():
 
     l = MP.Lock()
     pool = MP.Pool(processes=4, initializer=process_init, initargs=(l,))
-    fdList = list()
+    
 
 if __name__ == "__main__":
     server()
