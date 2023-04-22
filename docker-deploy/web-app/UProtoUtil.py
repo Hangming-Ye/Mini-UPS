@@ -1,38 +1,12 @@
-import psycopg2
-import socket
 import world_ups_pb2, U2A_pb2
-import sys
-import threading
-import select
 from msg import *
-import smtplib
-from email.mime.text import MIMEText
-import time
 from db import *
 from orm import *
-
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
 
 seq = 0
 ack_set = set()
-
-'''
-@Desc   :Connect to server and get world_socket
-@Arg    :None
-@Return :world_socket
-'''
-def connectServer():
-    world_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    world_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    ip_port = ('0.0.0.0', 12345)
-    try:
-        world_socket.connect(ip_port)
-        print("Socket Connected")
-    except:
-        print("Connection error")
-        exit(0)
-    return world_socket
 
 '''
 @Desc   :Connect to the world and initialize trucks
@@ -74,6 +48,11 @@ def connectWorld(session, world_socket, truck_num, world_id):
 
     return worldid
 
+'''
+@Desc   :
+@Arg    :
+@Return :
+'''
 def reconnect_to_world(world_socket, world_id):
     uconnect = world_ups_pb2.UConnect()
     uconnect.isAmazon = False
@@ -181,3 +160,79 @@ def send_UQuery(world_socket, truckid, seq):
     query.seqnum = seq
     send_msg(world_socket, ucommands)
     print("Sent UCommand UQuery")
+
+'''
+@Desc   : parse the message from UPS
+@Arg    : Byte UResponses message
+@Return : proto object UResponses message
+'''
+def parseWResp(msg):
+    worldResp = world_ups_pb2.UResponses()
+    worldResp.ParseFromString(msg)
+    return worldResp
+
+'''
+@Desc   : handle each command in the worldResp (UResponse)
+@Arg    : session: db session, worldResp: response message from world
+@Return : 
+'''
+def handlewResp(session, worldResp, fdW, fdA):
+    for completion in worldResp.completions:
+        handleUFinished(session, completion, fdW, fdA)
+        
+    for delivery in worldResp.delivered:
+        handleUDeliveryMade(session, delivery, fdW, fdA)
+
+    for ack in worldResp.acks:
+        handleAck(ack, fdW, fdA)
+
+    for truck in worldResp.truckstatus:
+        handleTruck(session, truck, fdW, fdA)
+
+    for err in worldResp.error:
+        print(err)
+
+    if worldResp.HasField("finished") and worldResp.finished:  # close connection
+        print("disconnect successfully")
+
+'''
+@Desc   : handle the UFinished response from world, identify which stage of truck, forward to amazon if arriving wh
+@Arg    : session: db session, completion: UFinished Object
+@Return : 
+'''
+def handleUFinished(session, completion, fdW, fdA):
+    truck = session.query(Truck).filter_by(Truck.truck_id==completion.truckid).first()
+    if completion.status == "arrive warehouse":
+        truck.status = TruckStatusEnum.arriveWH
+    else:
+        truck.status = TruckStatusEnum.idle
+
+    truck.location_x = completion.x
+    truck.location_y = completion.y
+    session.commit()
+
+'''
+@Desc   : handle the UDeliveryMade response from world, change package status, forward to amazon
+@Arg    : session: db session, delivery: UDeliveryMade Object
+@Return :
+'''
+def handleUDeliveryMade(session, delivery, fdW, fdA):
+    package = session.query(Package).filter_by(Package.package_id == delivery.packageid).first()
+    package.status = PackageStatusEnum.complete
+    session.commit()
+
+'''
+@Desc   : handle the ack of world
+@Arg    : ack: ack in the response 
+@Return :
+'''
+def handleAck(ack, fdW, fdA):
+    print(ack)
+
+'''
+@Desc   : unpack the info of truck from world response
+@Arg    :
+@Return :
+'''
+def handleTruck(session, truck, fdW, fdA):
+    print(truck)
