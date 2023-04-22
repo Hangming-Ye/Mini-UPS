@@ -2,6 +2,7 @@ import world_ups_pb2, U2A_pb2
 from msg import *
 from db import *
 from orm import *
+from AProtoUtil import *
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
 
@@ -30,7 +31,7 @@ def connectWorld(session, world_socket, truck_num, world_id):
 
         truck = Truck(truck_id=i+1, location_x = 0, location_y = 0, status = TruckStatusEnum.idle)
         session.add(truck)
-        session.commit()
+    session.commit()
 
     #send UConnect to world
     send_msg(world_socket, uconnect)
@@ -84,6 +85,8 @@ def send_UGoPickup(session, world_socket, whid, seq):
 
     #fetch the first truckid with status = idle
     truck = session.query(Truck).filter_by(status=TruckStatusEnum.idle).first()
+    if not truck:
+        truck = session.query(Truck).filter_by(status=TruckStatusEnum.delivering).first()
     truckid = truck.truck_id
     pickup.truckid = truckid
     #update the status of this truck to driveWH
@@ -118,13 +121,11 @@ def send_UGoDeliver(session, world_socket, truckid, seq):
 
     # Find all the packages which status are 'loaded' and truck_id is truckid, change status to 'delivering'
     packages = session.query(Package).filter_by(status=PackageStatusEnum.loaded, truck_id=truckid)
-    for package in packages.all():
-        package.status = PackageStatusEnum.delivering
-        session.commit()
+    packages.update({'status': PackageStatusEnum.delivering})
+    packages.commit()
 
     # Change this truck from 'arriveWH' to 'delivering'
-    truck = session.query(Truck).filter_by(truck_id=truckid).one()
-    truck.status = TruckStatusEnum.delivering
+    session.query(Truck).filter_by(truck_id=truckid).update({'status': TruckStatusEnum.delivering})
     session.commit()
 
     for package in packages.all():
@@ -204,12 +205,11 @@ def handleUFinished(session, completion, fdW, fdA):
     truck = session.query(Truck).filter_by(Truck.truck_id==completion.truckid).first()
     if completion.status == "arrive warehouse":
         truck.status = TruckStatusEnum.arriveWH
+        session.commit()
+        send_UArrived(fdA, truck.truckid, seq)
     else:
         truck.status = TruckStatusEnum.idle
-
-    truck.location_x = completion.x
-    truck.location_y = completion.y
-    session.commit()
+        session.commit()
 
 '''
 @Desc   : handle the UDeliveryMade response from world, change package status, forward to amazon
@@ -220,6 +220,8 @@ def handleUDeliveryMade(session, delivery, fdW, fdA):
     package = session.query(Package).filter_by(Package.package_id == delivery.packageid).first()
     package.status = PackageStatusEnum.complete
     session.commit()
+    send_UDelivered(fdA, package.package_id, seq)
+    
 
 '''
 @Desc   : handle the ack of world

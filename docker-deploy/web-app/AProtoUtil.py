@@ -6,6 +6,7 @@ import U2A_pb2 as U2A
 from tmp_wyj import *
 from db import *
 from orm import *
+from UProtoUtil import *
 
 '''
 @Desc   : parse the message from amazon
@@ -16,6 +17,7 @@ def parseAMsg(msg):
     amazonMsg = U2A.ACommand()
     amazonMsg.ParseFromString(msg)
     return amazonMsg
+
 
 '''
 @Desc   :handle each command in the AMsg
@@ -35,11 +37,21 @@ def handleAMsg(session, AMsg, fdW, fdA):
     for err in AMsg.error:
         print(err)
 
+'''
+@Desc   :
+@Arg    :
+@Return :
+'''
 def handleAPickup(session, pickup, fdW, fdA):
-    pass
-    
-    
+    truckid = send_UGoPickup(session, fdW, pickup.hid, pickup.seqnum)
+    send_UPickupRes(fdA, truckid, None)
 
+
+'''
+@Desc   :
+@Arg    :
+@Return :
+'''
 def handleALoad(session, load, fdW, fdA):
     for item in load.ItemInfo:
         item_id = item.item_id
@@ -47,14 +59,74 @@ def handleALoad(session, load, fdW, fdA):
         name = item.name
         desc = item.desc
     pack = Package(package_id = load.package_id, status = PackageStatusEnum.loaded, location_x = load.location_x, 
-                   location_y = load.location_y, truck_id = load.truckid, time = int(time.time()), email = load.email, 
+                   location_y = load.location_y, truck_id = load.truckid, email = load.email, 
                    item_id = item_id, item_num = num, item_name = name, item_desc = desc)
     session.add(pack)
     session.commit()
 
 
+'''
+@Desc   :
+@Arg    :
+@Return :
+'''
 def handleALoadComplete(session, loadComplete, fdW, fdA):
-    session.query(Truck).filter_by(Truck.truck_id == loadComplete.truckid).update({'status': TruckStatusEnum.delivering})
-    session.commit()
-    session.query(Package).filter_by(Package.truck_id == loadComplete.truckid).update({'status': PackageStatusEnum.delivering})
-    session.commit()
+    send_UGoDeliver(session, fdW, loadComplete.truckid, loadComplete.seqnum)
+
+
+'''
+@Desc   :
+@Arg    :
+@Return :
+'''
+def send_UPickupRes(amazon_socket, truckid, seq):
+    ucommand = U2A_pb2.UCommand()
+    pickupres = ucommand.upickupRes.add()
+    pickupres.truckid = truckid
+    pickupres.seqnum = seq
+    send_msg(amazon_socket, ucommand)
+    print("Sent UCommand UPickupRes")
+
+
+'''
+@Desc   :
+@Arg    :
+@Return :
+'''
+def send_UArrived(amazon_socket, truckid, seq):
+    ucommand = U2A_pb2.UCommand()
+    arrived = ucommand.uarrived.add()
+    arrived.truckid = truckid
+    arrived.seqnum = seq
+    send_msg(amazon_socket, ucommand)
+    print("Sent UCommand UArrived")
+
+
+'''
+@Desc   :
+@Arg    :
+@Return :
+'''
+def send_UDelivered(amazon_socket, packageid, seq):
+    ucommand = U2A_pb2.UCommand()
+    delivered = ucommand.udelivered.add()
+    delivered.packageid = packageid
+    delivered.seqnum = seq
+    send_msg(amazon_socket, ucommand)
+    print("Sent UCommand UDelivered")
+
+
+'''
+@Desc   :
+@Arg    :
+@Return :
+'''
+def send_UError(amazon_socket, err_code, msg, seq):
+    ucommand = U2A_pb2.UCommand()
+    error = ucommand.uerror.add()
+    error.code = err_code
+    if msg:
+        error.msg = msg
+    error.seqnum = seq
+    send_msg(amazon_socket, ucommand)
+    print("Sent UCommand UError")

@@ -37,7 +37,6 @@ class Package(Base):
     location_x = Column(Integer, nullable=True, default=None)
     location_y = Column(Integer, nullable=True, default=None)
     truck_id = Column(Integer, ForeignKey('truck.truck_id',ondelete="SET NULL", onupdate="CASCADE"))
-    time = Column(BIGINT)
     email = Column(String(256))
     item_id = Column(Integer)
     item_num = Column(Integer)
