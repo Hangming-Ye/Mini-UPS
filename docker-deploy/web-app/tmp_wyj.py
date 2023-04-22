@@ -181,3 +181,38 @@ def send_UQuery(world_socket, truckid, seq):
     query.seqnum = seq
     send_msg(world_socket, ucommands)
     print("Sent UCommand UQuery")
+
+def send_UPickupRes(amazon_socket, truckid, seq):
+    ucommand = U2A_pb2.UCommand()
+    pickupres = ucommand.upickupRes.add()
+    pickupres.truckid = truckid
+    pickupres.seqnum = seq
+    send_msg(amazon_socket, ucommand)
+    print("Sent UCommand UPickupRes")
+
+def send_UArrived(amazon_socket, truckid, seq):
+    ucommand = U2A_pb2.UCommand()
+    arrived = ucommand.uarrived.add()
+    arrived.truckid = truckid
+    arrived.seqnum = seq
+    send_msg(amazon_socket, ucommand)
+    print("Sent UCommand UArrived")
+
+def send_UDelivered(amazon_socket, packageid, seq):
+    ucommand = U2A_pb2.UCommand()
+    delivered = ucommand.udelivered.add()
+    delivered.packageid = packageid
+    delivered.seqnum = seq
+    send_msg(amazon_socket, ucommand)
+    print("Sent UCommand UDelivered")
+
+def send_UError(amazon_socket, err_code, msg, seq):
+    ucommand = U2A_pb2.UCommand()
+    error = ucommand.uerror.add()
+    error.code = err_code
+    if msg:
+        error.msg = msg
+    error.seqnum = seq
+    send_msg(amazon_socket, ucommand)
+    print("Sent UCommand UError")
+
