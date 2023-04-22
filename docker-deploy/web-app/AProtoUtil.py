@@ -22,26 +22,39 @@ def parseAMsg(msg):
 @Arg    :
 @Return :
 '''
-def handleAMsg(AMsg, fdW, fdA):
+def handleAMsg(session, AMsg, fdW, fdA):
     for pickup in AMsg.pickups:
-        handleAPickup(pickup, fdW, fdA)
+        handleAPickup(session, pickup, fdW, fdA)
         
     for load in AMsg.toload:
-        handleALoad(load, fdW, fdA)
+        handleALoad(session, load, fdW, fdA)
 
     for loadComplete in AMsg.comp:
-        handleALoadComplete(loadComplete, fdW, fdA)
+        handleALoadComplete(session, loadComplete, fdW, fdA)
 
     for err in AMsg.error:
         print(err)
 
-def handleAPickup(pickup, fdW, fdA):
-    seqNum = pickup.seqNum
-    hid = pickup.hid
+def handleAPickup(session, pickup, fdW, fdA):
+    pass
+    
     
 
-def handleALoad(load, fdW, fdA):
-    print(load)
+def handleALoad(session, load, fdW, fdA):
+    for item in load.ItemInfo:
+        item_id = item.item_id
+        num = item.num
+        name = item.name
+        desc = item.desc
+    pack = Package(package_id = load.package_id, status = PackageStatusEnum.loaded, location_x = load.location_x, 
+                   location_y = load.location_y, truck_id = load.truckid, time = int(time.time()), email = load.email, 
+                   item_id = item_id, item_num = num, item_name = name, item_desc = desc)
+    session.add(pack)
+    session.commit()
 
-def handleALoadComplete(loadComplete, fdW, fdA):
-    print(loadComplete)
+
+def handleALoadComplete(session, loadComplete, fdW, fdA):
+    session.query(Truck).filter_by(Truck.truck_id == loadComplete.truckid).update({'status': TruckStatusEnum.delivering})
+    session.commit()
+    session.query(Package).filter_by(Package.truck_id == loadComplete.truckid).update({'status': PackageStatusEnum.delivering})
+    session.commit()
