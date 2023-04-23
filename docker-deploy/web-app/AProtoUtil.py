@@ -25,6 +25,7 @@ def parseAMsg(msg):
 @Return :
 '''
 def handleAMsg(session, AMsg, fdW, fdA):
+    AMsg = parseWResp(AMsg)
     for pickup in AMsg.pickups:
         handleAPickup(session, pickup, fdW, fdA)
         

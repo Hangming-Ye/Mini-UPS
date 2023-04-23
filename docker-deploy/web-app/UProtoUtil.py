@@ -2,11 +2,11 @@ import world_ups_pb2, U2A_pb2
 from msg import *
 from db import *
 from orm import *
-from AProtoUtil import *
+import AProtoUtil
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
+import server
 
-seq = 0
 ack_set = set()
 
 '''
@@ -178,6 +178,7 @@ def parseWResp(msg):
 @Return : 
 '''
 def handlewResp(session, worldResp, fdW, fdA):
+    worldResp = parseWResp(worldResp)
     for completion in worldResp.completions:
         handleUFinished(session, completion, fdW, fdA)
         
@@ -206,7 +207,7 @@ def handleUFinished(session, completion, fdW, fdA):
     if completion.status == "arrive warehouse":
         truck.status = TruckStatusEnum.arriveWH
         session.commit()
-        send_UArrived(fdA, truck.truckid, seq)
+        AProtoUtil.send_UArrived(fdA, truck.truckid, server.seq)
     else:
         truck.status = TruckStatusEnum.idle
         session.commit()
@@ -220,7 +221,7 @@ def handleUDeliveryMade(session, delivery, fdW, fdA):
     package = session.query(Package).filter_by(Package.package_id == delivery.packageid).first()
     package.status = PackageStatusEnum.complete
     session.commit()
-    send_UDelivered(fdA, package.package_id, seq)
+    AProtoUtil.send_UDelivered(fdA, package.package_id, server.seq)
     
 
 '''
