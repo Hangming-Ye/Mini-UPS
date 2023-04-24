@@ -44,7 +44,7 @@ def handleAMsg(session, AMsg, fdW):
 @Return :
 '''
 def handleAPickup(session, pickup, fdW, fdA):
-    truckid = send_UGoPickup(session, fdW, pickup.hid, pickup.seqnum)
+    truckid = send_UGoPickup(session, fdW, pickup.hid)
     send_UPickupRes(fdA, truckid, None)
 
 
@@ -72,7 +72,7 @@ def handleALoad(session, load, fdW, fdA):
 @Return :
 '''
 def handleALoadComplete(session, loadComplete, fdW, fdA):
-    send_UGoDeliver(session, fdW, loadComplete.truckid, loadComplete.seqnum)
+    send_UGoDeliver(session, fdW, loadComplete.truckid)
 
 
 '''
