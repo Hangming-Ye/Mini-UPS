@@ -87,7 +87,8 @@ def send_UGoPickup(session, world_socket, whid):
     if not truck:
         truck = session.query(Truck).filter_by(status=TruckStatusEnum.delivering).first()
         if not truck:
-            server.waitlist = whid
+            server.waitlist.put(whid)
+            return -1
     truckid = truck.truck_id
     pickup.truckid = truckid
 
@@ -150,6 +151,10 @@ def send_UGoDeliver(session, world_socket, truckid):
     session.query(Truck).filter_by(truck_id=truckid).update({'status': TruckStatusEnum.delivering})
     session.commit()
 
+    if not server.waitlist.empty():
+        whid = server.waitlist.get()
+        send_UGoPickup(session, world_socket, whid)
+
 '''
 @Desc   :Check where the truck is
 @Arg    :world_socket, truckid, seq
@@ -170,10 +175,15 @@ def send_UQuery(world_socket, truckid):
             break
         print("Sent UCommand query, not recceived by world " + str(query.seqnum))
 
-def send_ack(world_socket, ack):
+'''
+@Desc   :
+@Arg    :
+@Return :
+'''
+def send_ack(world_socket, ackList):
     ucommands = world_ups_pb2.UCommands()
     ucommands.disconnect = False
-    ucommands.acks.append(ack)
+    ucommands.acks.extend(ackList)
     #send UCommand to world
     send_msg(world_socket, ucommands)
 
@@ -192,19 +202,42 @@ def parseWResp(msg):
 @Arg    : session: db session, worldResp: response message from world
 @Return : 
 '''
-def handlewResp(session, worldResp, fdW, fdA):
-    worldResp = parseWResp(worldResp)
+def sendAckBack(worldResp):
+    ackList = []
     for completion in worldResp.completions:
-        handleUFinished(session, completion, fdW, fdA)
+        ackList.append(completion.seqnum)
         
     for delivery in worldResp.delivered:
-        handleUDeliveryMade(session, delivery, fdW, fdA)
-
-    for ack in worldResp.acks:
-        handleAck(ack, fdW, fdA)
+        ackList.append(delivery.seqnum)
 
     for truck in worldResp.truckstatus:
-        handleTruck(session, truck, fdW, fdA)
+        ackList.append(truck.seqnum)
+
+    for err in worldResp.error:
+        ackList.append(err.seqnum)
+    
+    if len(ackList) != 0:
+        send_ack(ackList)
+
+'''
+@Desc   : handle each command in the worldResp (UResponse)
+@Arg    : session: db session, worldResp: response message from world
+@Return : 
+'''
+def handlewResp(session, msg):
+    worldResp = parseWResp(msg)
+    sendAckBack(worldResp)
+    for completion in worldResp.completions:
+        handleUFinished(session, completion)
+        
+    for delivery in worldResp.delivered:
+        handleUDeliveryMade(session, delivery)
+
+    for ack in worldResp.acks:
+        handleAck(ack)
+
+    for truck in worldResp.truckstatus:
+        handleTruck(truck)
 
     for err in worldResp.error:
         print(err)
@@ -212,32 +245,32 @@ def handlewResp(session, worldResp, fdW, fdA):
     if worldResp.HasField("finished") and worldResp.finished:  # close connection
         print("disconnect successfully")
 
-
 '''
 @Desc   : handle the UFinished response from world, identify which stage of truck, forward to amazon if arriving wh
 @Arg    : session: db session, completion: UFinished Object
 @Return : 
 '''
-def handleUFinished(session, completion, fdW, fdA):
+def handleUFinished(session, completion):
     truck = session.query(Truck).filter_by(Truck.truck_id==completion.truckid).first()
-    if completion.status == "arrive warehouse":
+    if completion.status == "ARRIVE WAREHOUSE":
         truck.status = TruckStatusEnum.arriveWH
         session.commit()
-        AProtoUtil.send_UArrived(fdA, truck.truckid, server.seq)
+        AProtoUtil.send_UArrived(truck.truckid)
     else:
         truck.status = TruckStatusEnum.idle
         session.commit()
+
 
 '''
 @Desc   : handle the UDeliveryMade response from world, change package status, forward to amazon
 @Arg    : session: db session, delivery: UDeliveryMade Object
 @Return :
 '''
-def handleUDeliveryMade(session, delivery, fdW, fdA):
+def handleUDeliveryMade(session, delivery):
     package = session.query(Package).filter_by(Package.package_id == delivery.packageid).first()
     package.status = PackageStatusEnum.complete
     session.commit()
-    AProtoUtil.send_UDelivered(fdA, package.package_id, server.seq)
+    AProtoUtil.send_UDelivered(package.package_id)
     
 
 '''
@@ -245,15 +278,17 @@ def handleUDeliveryMade(session, delivery, fdW, fdA):
 @Arg    : ack: ack in the response 
 @Return :
 '''
-def handleAck(ack, fdW, fdA):
-    print(ack)
+def handleAck(ackList):
+    for ack in ackList:
+        server.ack_set.add(ack)
+
 
 '''
 @Desc   : unpack the info of truck from world response
 @Arg    :
 @Return :
 '''
-def handleTruck(session, truck, fdW, fdA):
+def handleTruck(truck):
     print(truck)
 
 def get_seqnum() -> int:

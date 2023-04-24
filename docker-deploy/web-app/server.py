@@ -21,17 +21,11 @@ AMZ_ADDR = "0.0.0.0"
 TruckNum = 100
 threadPool = ThreadPoolExecutor(40)
 seq = 0
-act_set = set()
+ack_set = set()
 seqLock = threading.Lock()
 fdWLock = threading.Lock()
-
-def process_init(WSocketLock, worldSocket, seqnum, sLock, ackSet):
-    global fdWlock, fdW, session_factory, seq, seqLock, ack_set
-    fdWlock = WSocketLock
-    fdW = worldSocket
-    seq = seqnum
-    seqLock = sLock
-    ack_set = ackSet
+ackLock = threading.Lock()
+waitlist = Queue()
 
 def worldProcess(world_ip, world_port):
     while True:
@@ -39,7 +33,7 @@ def worldProcess(world_ip, world_port):
         if msg is None:
             break
         else:
-            threadPool.submit(handlewResp,(session_factory(), msg, fdW, ))
+            threadPool.submit(handlewResp,(session_factory(), msg))
 
 def AmazonProcess(amazon_addr, ups_port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

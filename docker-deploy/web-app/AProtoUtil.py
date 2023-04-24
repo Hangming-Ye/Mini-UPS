@@ -30,7 +30,7 @@ def handleAMsg(session, AMsg, fdW):
         handleAPickup(session, pickup, fdW)
         
     for load in AMsg.toload:
-        handleALoad(session, load, fdW)
+        handleALoad(session, load)
 
     for loadComplete in AMsg.comp:
         handleALoadComplete(session, loadComplete, fdW)
@@ -43,9 +43,9 @@ def handleAMsg(session, AMsg, fdW):
 @Arg    :
 @Return :
 '''
-def handleAPickup(session, pickup, fdW, fdA):
-    truckid = send_UGoPickup(session, fdW, pickup.hid, pickup.seqnum)
-    send_UPickupRes(fdA, truckid, None)
+def handleAPickup(session, pickup, fdW):
+    truckid = send_UGoPickup(session, fdW, pickup.hid)
+    send_UPickupRes(truckid)
 
 
 '''
@@ -53,7 +53,7 @@ def handleAPickup(session, pickup, fdW, fdA):
 @Arg    :
 @Return :
 '''
-def handleALoad(session, load, fdW, fdA):
+def handleALoad(session, load):
     for item in load.ItemInfo:
         item_id = item.item_id
         num = item.num
@@ -71,7 +71,7 @@ def handleALoad(session, load, fdW, fdA):
 @Arg    :
 @Return :
 '''
-def handleALoadComplete(session, loadComplete, fdW, fdA):
+def handleALoadComplete(session, loadComplete, fdW):
     send_UGoDeliver(session, fdW, loadComplete.truckid, loadComplete.seqnum)
 
 
@@ -80,12 +80,14 @@ def handleALoadComplete(session, loadComplete, fdW, fdA):
 @Arg    :
 @Return :
 '''
-def send_UPickupRes(amazon_socket, truckid, seq):
+def send_UPickupRes(truckid):
     ucommand = U2A_pb2.UCommand()
     pickupres = ucommand.upickupRes.add()
     pickupres.truckid = truckid
-    pickupres.seqnum = seq
+    pickupres.seqnum = get_seqnum()
+    amazon_socket = connectToServer(server.AMZ_ADDR, server.AMZ_PORT)
     send_msg(amazon_socket, ucommand)
+    amazon_socket.close()
     print("Sent UCommand UPickupRes")
 
 
@@ -94,12 +96,14 @@ def send_UPickupRes(amazon_socket, truckid, seq):
 @Arg    :
 @Return :
 '''
-def send_UArrived(amazon_socket, truckid, seq):
+def send_UArrived(truckid):
     ucommand = U2A_pb2.UCommand()
     arrived = ucommand.uarrived.add()
     arrived.truckid = truckid
-    arrived.seqnum = seq
+    arrived.seqnum = get_seqnum()
+    amazon_socket = connectToServer(server.AMZ_ADDR, server.AMZ_PORT)
     send_msg(amazon_socket, ucommand)
+    amazon_socket.close()
     print("Sent UCommand UArrived")
 
 
@@ -108,12 +112,14 @@ def send_UArrived(amazon_socket, truckid, seq):
 @Arg    :
 @Return :
 '''
-def send_UDelivered(amazon_socket, packageid, seq):
+def send_UDelivered(packageid):
     ucommand = U2A_pb2.UCommand()
     delivered = ucommand.udelivered.add()
     delivered.packageid = packageid
-    delivered.seqnum = seq
+    delivered.seqnum = get_seqnum()
+    amazon_socket = connectToServer(server.AMZ_ADDR, server.AMZ_PORT)
     send_msg(amazon_socket, ucommand)
+    amazon_socket.close()
     print("Sent UCommand UDelivered")
 
 
@@ -122,12 +128,14 @@ def send_UDelivered(amazon_socket, packageid, seq):
 @Arg    :
 @Return :
 '''
-def send_UError(amazon_socket, err_code, msg, seq):
+def send_UError(err_code, msg):
     ucommand = U2A_pb2.UCommand()
     error = ucommand.uerror.add()
     error.code = err_code
     if msg:
         error.msg = msg
-    error.seqnum = seq
+    error.seqnum = get_seqnum()
+    amazon_socket = connectToServer(server.AMZ_ADDR, server.AMZ_PORT)
     send_msg(amazon_socket, ucommand)
+    amazon_socket.close()
     print("Sent UCommand UError")
