@@ -17,7 +17,7 @@ ack_set = set()
 def connectWorld(session, world_socket, truck_num, world_id):
     uconnect = world_ups_pb2.UConnect()
     uconnect.isAmazon = False
-    if not world_id:
+    if world_id > 0:
         uconnect.worldid = world_id
 
     #connect to db and initiate truck

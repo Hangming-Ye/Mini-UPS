@@ -18,6 +18,7 @@ def getSession(engine):
 
 def initDB():
     engine = connectDB()
+    dropAllTable(engine)
     insp = inspect(engine)
     if not (insp.has_table("truck") and insp.has_table("package")):
         dropAllTable(engine)

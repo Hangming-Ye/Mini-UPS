@@ -8,7 +8,7 @@ from google.protobuf.internal.encoder import _EncodeVarint
 @Return : void
 '''
 def send_msg(socketfd, msg):
-    msg.SerializeToString()
+    msg = msg.SerializeToString()
     _EncodeVarint(socketfd.send, len(msg), None)
     socketfd.sendall(msg)
 
