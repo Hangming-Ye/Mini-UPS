@@ -10,12 +10,11 @@ from email.mime.text import MIMEText
 import time
 from db import *
 from orm import *
+import server
 
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
 
-seq = 0
-ack_set = set()
 
 '''
 @Desc   :Connect to server and get world_socket
@@ -109,18 +108,18 @@ def send_UGoPickup(world_socket, whid, seq):
     session.commit()
     session.close()
 
-    #send UCommand to the world
-    send_msg(world_socket, ucommands)
-    print("Sent UCommand UGoPickup")
-    #handling message lost
-    '''
+    while(True):
+        #send UCommand to the world
+        send_msg(world_socket, ucommands)
+        print("Sent UCommand UGoPickup")
+        #handling message lost
         time.sleep(4)
         print(ack_set)
         if seq in ack_set:
             print("Sent UCommand go pick up, already received by world")
             break
         print(" Sent UCommand go pick up, not received by world " + str(seq))
-    '''
+    
     return truckid
 
 '''
@@ -156,17 +155,16 @@ def send_UGoDeliver(world_socket, truckid, seq):
     session.close()
     print("Finished writing UGoDelivery of Ucommand")
 
-    #send UCammand to world
-    send_msg(world_socket, ucommands)
-    print("Sent UCommand go delivery")
-    #handling message lost
-    """
+    while(True):
+        #send UCammand to world
+        send_msg(world_socket, ucommands)
+        print("Sent UCommand go delivery")
+        #handling message lost
         time.sleep(4)
         if seq in ack_set:
             print("Sent UCommand go delivery, already recceived by world")
             break
         print("Sent UCommand go delivery, not recceived by world " + str(seq))
-    """
 
 '''
 @Desc   :Check where the truck is
@@ -179,8 +177,21 @@ def send_UQuery(world_socket, truckid, seq):
     query = ucommands.queries.add()
     query.truckid = truckid
     query.seqnum = seq
+    while(True):
+        send_msg(world_socket, ucommands)
+        print("Sent UCommand UQuery")
+        time.sleep(4)
+        if seq in ack_set:
+            print("Sent UCommand query, already recceived by world")
+            break
+        print("Sent UCommand query, not recceived by world " + str(seq))
+
+def send_ack(world_socket, ack):
+    ucommands = world_ups_pb2.UCommands()
+    ucommands.disconnect = False
+    ucommands.acks.append(ack)
+    #send UCommand to world
     send_msg(world_socket, ucommands)
-    print("Sent UCommand UQuery")
 
 def send_UPickupRes(amazon_socket, truckid, seq):
     ucommand = U2A_pb2.UCommand()
@@ -216,3 +227,4 @@ def send_UError(amazon_socket, err_code, msg, seq):
     send_msg(amazon_socket, ucommand)
     print("Sent UCommand UError")
 
+    
