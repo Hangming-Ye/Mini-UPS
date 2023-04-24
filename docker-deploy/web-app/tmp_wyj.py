@@ -114,8 +114,8 @@ def send_UGoPickup(world_socket, whid, seq):
         print("Sent UCommand UGoPickup")
         #handling message lost
         time.sleep(4)
-        print(ack_set)
-        if seq in ack_set:
+        print(server.ack_set)
+        if seq in server.ack_set:
             print("Sent UCommand go pick up, already received by world")
             break
         print(" Sent UCommand go pick up, not received by world " + str(seq))

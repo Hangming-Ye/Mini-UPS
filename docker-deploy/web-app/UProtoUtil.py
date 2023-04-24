@@ -7,8 +7,6 @@ from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
 import server
 
-ack_set = set()
-
 '''
 @Desc   :Connect to the world and initialize trucks
 @Arg    :world_socket, Truck Number
@@ -17,7 +15,7 @@ ack_set = set()
 def connectWorld(session, world_socket, truck_num, world_id):
     uconnect = world_ups_pb2.UConnect()
     uconnect.isAmazon = False
-    if world_id > 0:
+    if not world_id:
         uconnect.worldid = world_id
 
     #connect to db and initiate truck
@@ -197,6 +195,7 @@ def handlewResp(session, worldResp, fdW, fdA):
     if worldResp.HasField("finished") and worldResp.finished:  # close connection
         print("disconnect successfully")
 
+
 '''
 @Desc   : handle the UFinished response from world, identify which stage of truck, forward to amazon if arriving wh
 @Arg    : session: db session, completion: UFinished Object
@@ -239,3 +238,10 @@ def handleAck(ack, fdW, fdA):
 '''
 def handleTruck(session, truck, fdW, fdA):
     print(truck)
+
+def get_seqnum() -> int:
+    server.seqLock.acquire()
+    ans = server.seq
+    server.seq += 1
+    server.seqLock.release()
+    return ans

@@ -24,16 +24,16 @@ def parseAMsg(msg):
 @Arg    :
 @Return :
 '''
-def handleAMsg(session, AMsg, fdW, fdA):
+def handleAMsg(session, AMsg, fdW):
     AMsg = parseWResp(AMsg)
     for pickup in AMsg.pickups:
-        handleAPickup(session, pickup, fdW, fdA)
+        handleAPickup(session, pickup, fdW)
         
     for load in AMsg.toload:
-        handleALoad(session, load, fdW, fdA)
+        handleALoad(session, load, fdW)
 
     for loadComplete in AMsg.comp:
-        handleALoadComplete(session, loadComplete, fdW, fdA)
+        handleALoadComplete(session, loadComplete, fdW)
 
     for err in AMsg.error:
         print(err)
