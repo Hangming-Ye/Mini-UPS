@@ -71,8 +71,8 @@ def handleALoad(session, load):
 @Arg    :
 @Return :
 '''
-def handleALoadComplete(session, loadComplete, fdW):
-    send_UGoDeliver(session, fdW, loadComplete.truckid, loadComplete.seqnum)
+def handleALoadComplete(session, loadComplete, fdW, fdA):
+    send_UGoDeliver(session, fdW, loadComplete.truckid)
 
 
 '''

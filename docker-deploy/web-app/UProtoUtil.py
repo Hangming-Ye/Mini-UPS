@@ -33,7 +33,9 @@ def connectWorld(session, world_socket, truck_num, world_id):
     session.commit()
 
     #send UConnect to world
+    server.fdWLock.acquire()
     send_msg(world_socket, uconnect)
+    server.fdWLock.release()
     print("Sent UConnect")
 
     #receive UConnected from world
@@ -59,7 +61,9 @@ def reconnect_to_world(world_socket, world_id):
     uconnect.worldid = world_id
 
     #send UConnect to world
+    server.fdWLock.acquire()
     send_msg(world_socket, uconnect)
+    server.fdWLock.release()
     print("Sent UConnect")
 
     #receive UConnected from world
@@ -94,7 +98,9 @@ def send_UGoPickup(session, world_socket, whid):
 
     while(True):
         #send UCommand to the world
+        server.fdWLock.acquire()
         send_msg(world_socket, ucommands)
+        server.fdWLock.release()
         print("Sent UCommand UGoPickup")
         #handling message lost
         time.sleep(1)
@@ -134,7 +140,9 @@ def send_UGoDeliver(session, world_socket, truckid):
 
     while(True):
         #send UCammand to world
+        server.fdWLock.acquire()
         send_msg(world_socket, ucommands)
+        server.fdWLock.release()
         print("Sent UCommand go delivery")
         #handling message lost
         time.sleep(1)
@@ -167,7 +175,9 @@ def send_UQuery(world_socket, truckid):
     query.truckid = truckid
     query.seqnum = get_seqnum()
     while(True):
+        server.fdWLock.acquire()
         send_msg(world_socket, ucommands)
+        server.fdWLock.release()
         print("Sent UCommand UQuery")
         time.sleep(1)
         if query.seqnum in server.ack_set:
@@ -185,7 +195,9 @@ def send_ack(world_socket, ackList):
     ucommands.disconnect = False
     ucommands.acks.extend(ackList)
     #send UCommand to world
+    server.fdWLock.acquire()
     send_msg(world_socket, ucommands)
+    server.fdWLock.release()
 
 '''
 @Desc   : parse the message from UPS
