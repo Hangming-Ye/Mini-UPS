@@ -2,6 +2,7 @@ import world_ups_pb2, U2A_pb2
 from msg import *
 from db import *
 from orm import *
+import time
 import AProtoUtil
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
@@ -74,35 +75,37 @@ def reconnect_to_world(world_socket, world_id):
 @Arg    :world_socket, truckid, warehouseid, seqnum
 @Return :truckid
 '''
-def send_UGoPickup(session, world_socket, whid, seq):
+def send_UGoPickup(session, world_socket, whid):
     ucommands = world_ups_pb2.UCommands()
     ucommands.disconnect = False
     pickup = ucommands.pickups.add()
     pickup.whid = whid
-    pickup.seqnum = seq
+    pickup.seqnum = get_seqnum()
 
     #fetch the first truckid with status = idle
     truck = session.query(Truck).filter_by(status=TruckStatusEnum.idle).first()
     if not truck:
         truck = session.query(Truck).filter_by(status=TruckStatusEnum.delivering).first()
+        if not truck:
+            server.waitlist = whid
     truckid = truck.truck_id
     pickup.truckid = truckid
+
+    while(True):
+        #send UCommand to the world
+        send_msg(world_socket, ucommands)
+        print("Sent UCommand UGoPickup")
+        #handling message lost
+        time.sleep(1)
+        print(server.ack_set)
+        if pickup.seqnum in server.ack_set:
+            print("Sent UCommand go pick up, already received by world")
+            break
+        print(" Sent UCommand go pick up, not received by world " + str(pickup.seqnum))
+    
     #update the status of this truck to driveWH
     truck.status = TruckStatusEnum.driveWH
     session.commit()
-
-    #send UCommand to the world
-    send_msg(world_socket, ucommands)
-    print("Sent UCommand UGoPickup")
-    #handling message lost
-    '''
-        time.sleep(4)
-        print(ack_set)
-        if seq in ack_set:
-            print("Sent UCommand go pick up, already received by world")
-            break
-        print(" Sent UCommand go pick up, not received by world " + str(seq))
-    '''
     return truckid
 
 '''
@@ -110,21 +113,15 @@ def send_UGoPickup(session, world_socket, whid, seq):
 @Arg    :world_socket, truckid, seq
 @Return :None
 '''
-def send_UGoDeliver(session, world_socket, truckid, seq):
+def send_UGoDeliver(session, world_socket, truckid):
     ucommands = world_ups_pb2.UCommands()
     ucommands.disconnect = False
     delivery = ucommands.deliveries.add()
     delivery.truckid = truckid
-    delivery.seqnum = seq
+    delivery.seqnum = get_seqnum()
 
-    # Find all the packages which status are 'loaded' and truck_id is truckid, change status to 'delivering'
+    # Find all the packages which status are 'loaded' and truck_id is truckid 
     packages = session.query(Package).filter_by(status=PackageStatusEnum.loaded, truck_id=truckid)
-    packages.update({'status': PackageStatusEnum.delivering})
-    packages.commit()
-
-    # Change this truck from 'arriveWH' to 'delivering'
-    session.query(Truck).filter_by(truck_id=truckid).update({'status': TruckStatusEnum.delivering})
-    session.commit()
 
     for package in packages.all():
         delivery_location = delivery.packages.add()
@@ -134,31 +131,51 @@ def send_UGoDeliver(session, world_socket, truckid, seq):
 
     print("Finished writing UGoDelivery of Ucommand")
 
-    #send UCammand to world
-    send_msg(world_socket, ucommands)
-    print("Sent UCommand go delivery")
-    #handling message lost
-    """
-        time.sleep(4)
-        if seq in ack_set:
+    while(True):
+        #send UCammand to world
+        send_msg(world_socket, ucommands)
+        print("Sent UCommand go delivery")
+        #handling message lost
+        time.sleep(1)
+        if delivery.seqnum in server.ack_set:
             print("Sent UCommand go delivery, already recceived by world")
             break
-        print("Sent UCommand go delivery, not recceived by world " + str(seq))
-    """
+        print("Sent UCommand go delivery, not recceived by world " + str(delivery.seqnum))
+
+    #change packages' status to 'delivering'
+    packages.update({'status': PackageStatusEnum.delivering})
+    packages.commit()
+
+    # Change this truck from 'arriveWH' to 'delivering'
+    session.query(Truck).filter_by(truck_id=truckid).update({'status': TruckStatusEnum.delivering})
+    session.commit()
 
 '''
 @Desc   :Check where the truck is
 @Arg    :world_socket, truckid, seq
 @Return :None
 '''
-def send_UQuery(world_socket, truckid, seq):
+def send_UQuery(world_socket, truckid):
     ucommands = world_ups_pb2.UCommands()
     ucommands.disconnect = False
     query = ucommands.queries.add()
     query.truckid = truckid
-    query.seqnum = seq
+    query.seqnum = get_seqnum()
+    while(True):
+        send_msg(world_socket, ucommands)
+        print("Sent UCommand UQuery")
+        time.sleep(1)
+        if query.seqnum in server.ack_set:
+            print("Sent UCommand query, already recceived by world")
+            break
+        print("Sent UCommand query, not recceived by world " + str(query.seqnum))
+
+def send_ack(world_socket, ack):
+    ucommands = world_ups_pb2.UCommands()
+    ucommands.disconnect = False
+    ucommands.acks.append(ack)
+    #send UCommand to world
     send_msg(world_socket, ucommands)
-    print("Sent UCommand UQuery")
 
 '''
 @Desc   : parse the message from UPS
