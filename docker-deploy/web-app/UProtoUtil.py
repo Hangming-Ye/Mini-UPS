@@ -16,7 +16,7 @@ import server
 def connectWorld(session, world_socket, truck_num, world_id):
     uconnect = world_ups_pb2.UConnect()
     uconnect.isAmazon = False
-    if not world_id:
+    if world_id:
         uconnect.worldid = world_id
 
     #connect to db and initiate truck
@@ -153,7 +153,7 @@ def send_UGoDeliver(session, world_socket, truckid):
 
     #change packages' status to 'delivering'
     packages.update({'status': PackageStatusEnum.delivering})
-    packages.commit()
+    session.commit()
 
     # Change this truck from 'arriveWH' to 'delivering'
     session.query(Truck).filter_by(truck_id=truckid).update({'status': TruckStatusEnum.delivering})
@@ -190,7 +190,7 @@ def send_UQuery(world_socket, truckid):
 @Arg    :
 @Return :
 '''
-def send_ack(world_socket, ackList):
+def send_ack(ackList, world_socket):
     ucommands = world_ups_pb2.UCommands()
     ucommands.disconnect = False
     ucommands.acks.extend(ackList)
@@ -214,7 +214,7 @@ def parseWResp(msg):
 @Arg    : session: db session, worldResp: response message from world
 @Return : 
 '''
-def sendAckBack(worldResp):
+def sendAckBack(worldResp, fdW):
     ackList = []
     for completion in worldResp.completions:
         ackList.append(completion.seqnum)
@@ -228,25 +228,26 @@ def sendAckBack(worldResp):
     for err in worldResp.error:
         ackList.append(err.seqnum)
     
+    for ack in worldResp.acks:
+        handleAck(ack)
+
     if len(ackList) != 0:
-        send_ack(ackList)
+        send_ack(ackList, fdW)
 
 '''
 @Desc   : handle each command in the worldResp (UResponse)
 @Arg    : session: db session, worldResp: response message from world
 @Return : 
 '''
-def handlewResp(session, msg):
+def handlewResp(session, msg, fdW):
     worldResp = parseWResp(msg)
-    sendAckBack(worldResp)
+    sendAckBack(worldResp, fdW)
+
     for completion in worldResp.completions:
         handleUFinished(session, completion)
         
     for delivery in worldResp.delivered:
         handleUDeliveryMade(session, delivery)
-
-    for ack in worldResp.acks:
-        handleAck(ack)
 
     for truck in worldResp.truckstatus:
         handleTruck(truck)
@@ -290,9 +291,8 @@ def handleUDeliveryMade(session, delivery):
 @Arg    : ack: ack in the response 
 @Return :
 '''
-def handleAck(ackList):
-    for ack in ackList:
-        server.ack_set.add(ack)
+def handleAck(ack):
+    server.ack_set.add(ack)
 
 
 '''

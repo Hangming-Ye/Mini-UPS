@@ -45,7 +45,6 @@ def handleAMsg(session, AMsg, fdW):
 '''
 def handleAPickup(session, pickup, fdW):
     truckid = send_UGoPickup(session, fdW, pickup.hid)
-    send_UPickupRes(truckid)
 
 
 '''
@@ -80,26 +79,11 @@ def handleALoadComplete(session, loadComplete, fdW, fdA):
 @Arg    :
 @Return :
 '''
-def send_UPickupRes(truckid):
-    ucommand = U2A_pb2.UCommand()
-    pickupres = ucommand.upickupRes.add()
-    pickupres.truckid = truckid
-    pickupres.seqnum = get_seqnum()
-    amazon_socket = connectToServer(server.AMZ_ADDR, server.AMZ_PORT)
-    send_msg(amazon_socket, ucommand)
-    amazon_socket.close()
-    print("Sent UCommand UPickupRes")
-
-
-'''
-@Desc   :
-@Arg    :
-@Return :
-'''
-def send_UArrived(truckid):
+def send_UArrived(truckid,whid):
     ucommand = U2A_pb2.UCommand()
     arrived = ucommand.uarrived.add()
     arrived.truckid = truckid
+    arrived.whid = whid
     arrived.seqnum = get_seqnum()
     amazon_socket = connectToServer(server.AMZ_ADDR, server.AMZ_PORT)
     send_msg(amazon_socket, ucommand)

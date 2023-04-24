@@ -19,48 +19,10 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto2',
   serialized_options=None,
-  serialized_pb=_b('\n\tU2A.proto\"-\n\nUPickupRes\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"+\n\x08UArrived\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"/\n\nUDelivered\x12\x11\n\tpackageid\x18\x01 \x02(\x03\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"3\n\x06UError\x12\x0c\n\x04\x63ode\x18\x01 \x02(\x05\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"\x90\x01\n\x08UCommand\x12\x1f\n\nupickupRes\x18\x01 \x03(\x0b\x32\x0b.UPickupRes\x12\x1b\n\x08uarrived\x18\x02 \x03(\x0b\x32\t.UArrived\x12\x1f\n\nudelivered\x18\x03 \x03(\x0b\x32\x0b.UDelivered\x12\x17\n\x06uerror\x18\x04 \x03(\x0b\x32\x07.UError\x12\x0c\n\x04\x61\x63ks\x18\x05 \x03(\x03\")\n\nAPickupReq\x12\x0b\n\x03hid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"@\n\x05\x41Item\x12\x0e\n\x06itemid\x18\x01 \x02(\x05\x12\x0b\n\x03num\x18\x02 \x02(\x05\x12\x0c\n\x04name\x18\x03 \x02(\t\x12\x0c\n\x04\x64\x65sc\x18\x04 \x02(\t\"\x99\x01\n\x05\x41Load\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0b\n\x03hid\x18\x02 \x02(\x05\x12\x11\n\tpackageid\x18\x03 \x02(\x03\x12\x12\n\nlocation_x\x18\x04 \x02(\x05\x12\x12\n\nlocation_y\x18\x05 \x02(\x05\x12\x0e\n\x06seqnum\x18\x06 \x02(\x03\x12\r\n\x05\x65mail\x18\x07 \x02(\t\x12\x18\n\x08itemInfo\x18\x08 \x03(\x0b\x32\x06.AItem\"0\n\rALoadComplete\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"3\n\x06\x41\x45rror\x12\x0c\n\x04\x63ode\x18\x01 \x02(\x05\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"\x84\x01\n\x08\x41\x43ommand\x12\x1c\n\x07pickups\x18\x01 \x03(\x0b\x32\x0b.APickupReq\x12\x16\n\x06toload\x18\x02 \x03(\x0b\x32\x06.ALoad\x12\x1c\n\x04\x63omp\x18\x03 \x03(\x0b\x32\x0e.ALoadComplete\x12\x16\n\x05\x65rror\x18\x04 \x03(\x0b\x32\x07.AError\x12\x0c\n\x04\x61\x63ks\x18\x05 \x03(\x03')
+  serialized_pb=_b('\n\tU2A.proto\"9\n\x08UArrived\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0c\n\x04whid\x18\x02 \x02(\x05\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"/\n\nUDelivered\x12\x11\n\tpackageid\x18\x01 \x02(\x03\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"3\n\x06UError\x12\x0c\n\x04\x63ode\x18\x01 \x02(\x05\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"a\n\x08UCommand\x12\x1b\n\x08uarrived\x18\x01 \x03(\x0b\x32\t.UArrived\x12\x1f\n\nudelivered\x18\x02 \x03(\x0b\x32\x0b.UDelivered\x12\x17\n\x06uerror\x18\x03 \x03(\x0b\x32\x07.UError\")\n\nAPickupReq\x12\x0b\n\x03hid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"@\n\x05\x41Item\x12\x0e\n\x06itemid\x18\x01 \x02(\x05\x12\x0b\n\x03num\x18\x02 \x02(\x05\x12\x0c\n\x04name\x18\x03 \x02(\t\x12\x0c\n\x04\x64\x65sc\x18\x04 \x02(\t\"\x99\x01\n\x05\x41Load\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0b\n\x03hid\x18\x02 \x02(\x05\x12\x11\n\tpackageid\x18\x03 \x02(\x03\x12\x12\n\nlocation_x\x18\x04 \x02(\x05\x12\x12\n\nlocation_y\x18\x05 \x02(\x05\x12\x0e\n\x06seqnum\x18\x06 \x02(\x03\x12\r\n\x05\x65mail\x18\x07 \x02(\t\x12\x18\n\x08itemInfo\x18\x08 \x03(\x0b\x32\x06.AItem\"0\n\rALoadComplete\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"3\n\x06\x41\x45rror\x12\x0c\n\x04\x63ode\x18\x01 \x02(\x05\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"v\n\x08\x41\x43ommand\x12\x1c\n\x07pickups\x18\x01 \x03(\x0b\x32\x0b.APickupReq\x12\x16\n\x06toload\x18\x02 \x03(\x0b\x32\x06.ALoad\x12\x1c\n\x04\x63omp\x18\x03 \x03(\x0b\x32\x0e.ALoadComplete\x12\x16\n\x05\x65rror\x18\x04 \x03(\x0b\x32\x07.AError')
 )
 
 
-
-
-_UPICKUPRES = _descriptor.Descriptor(
-  name='UPickupRes',
-  full_name='UPickupRes',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='truckid', full_name='UPickupRes.truckid', index=0,
-      number=1, type=5, cpp_type=1, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='seqnum', full_name='UPickupRes.seqnum', index=1,
-      number=2, type=3, cpp_type=2, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=13,
-  serialized_end=58,
-)
 
 
 _UARRIVED = _descriptor.Descriptor(
@@ -78,8 +40,15 @@ _UARRIVED = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='seqnum', full_name='UArrived.seqnum', index=1,
-      number=2, type=3, cpp_type=2, label=2,
+      name='whid', full_name='UArrived.whid', index=1,
+      number=2, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='seqnum', full_name='UArrived.seqnum', index=2,
+      number=3, type=3, cpp_type=2, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -96,8 +65,8 @@ _UARRIVED = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=60,
-  serialized_end=103,
+  serialized_start=13,
+  serialized_end=70,
 )
 
 
@@ -134,8 +103,8 @@ _UDELIVERED = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=105,
-  serialized_end=152,
+  serialized_start=72,
+  serialized_end=119,
 )
 
 
@@ -179,8 +148,8 @@ _UERROR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=154,
-  serialized_end=205,
+  serialized_start=121,
+  serialized_end=172,
 )
 
 
@@ -192,36 +161,22 @@ _UCOMMAND = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='upickupRes', full_name='UCommand.upickupRes', index=0,
+      name='uarrived', full_name='UCommand.uarrived', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='uarrived', full_name='UCommand.uarrived', index=1,
+      name='udelivered', full_name='UCommand.udelivered', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='udelivered', full_name='UCommand.udelivered', index=2,
+      name='uerror', full_name='UCommand.uerror', index=2,
       number=3, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uerror', full_name='UCommand.uerror', index=3,
-      number=4, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='acks', full_name='UCommand.acks', index=4,
-      number=5, type=3, cpp_type=2, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -238,8 +193,8 @@ _UCOMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=208,
-  serialized_end=352,
+  serialized_start=174,
+  serialized_end=271,
 )
 
 
@@ -276,8 +231,8 @@ _APICKUPREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=354,
-  serialized_end=395,
+  serialized_start=273,
+  serialized_end=314,
 )
 
 
@@ -328,8 +283,8 @@ _AITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=397,
-  serialized_end=461,
+  serialized_start=316,
+  serialized_end=380,
 )
 
 
@@ -408,8 +363,8 @@ _ALOAD = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=464,
-  serialized_end=617,
+  serialized_start=383,
+  serialized_end=536,
 )
 
 
@@ -446,8 +401,8 @@ _ALOADCOMPLETE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=619,
-  serialized_end=667,
+  serialized_start=538,
+  serialized_end=586,
 )
 
 
@@ -491,8 +446,8 @@ _AERROR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=669,
-  serialized_end=720,
+  serialized_start=588,
+  serialized_end=639,
 )
 
 
@@ -531,13 +486,6 @@ _ACOMMAND = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='acks', full_name='ACommand.acks', index=4,
-      number=5, type=3, cpp_type=2, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -550,11 +498,10 @@ _ACOMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=723,
-  serialized_end=855,
+  serialized_start=641,
+  serialized_end=759,
 )
 
-_UCOMMAND.fields_by_name['upickupRes'].message_type = _UPICKUPRES
 _UCOMMAND.fields_by_name['uarrived'].message_type = _UARRIVED
 _UCOMMAND.fields_by_name['udelivered'].message_type = _UDELIVERED
 _UCOMMAND.fields_by_name['uerror'].message_type = _UERROR
@@ -563,7 +510,6 @@ _ACOMMAND.fields_by_name['pickups'].message_type = _APICKUPREQ
 _ACOMMAND.fields_by_name['toload'].message_type = _ALOAD
 _ACOMMAND.fields_by_name['comp'].message_type = _ALOADCOMPLETE
 _ACOMMAND.fields_by_name['error'].message_type = _AERROR
-DESCRIPTOR.message_types_by_name['UPickupRes'] = _UPICKUPRES
 DESCRIPTOR.message_types_by_name['UArrived'] = _UARRIVED
 DESCRIPTOR.message_types_by_name['UDelivered'] = _UDELIVERED
 DESCRIPTOR.message_types_by_name['UError'] = _UERROR
@@ -575,13 +521,6 @@ DESCRIPTOR.message_types_by_name['ALoadComplete'] = _ALOADCOMPLETE
 DESCRIPTOR.message_types_by_name['AError'] = _AERROR
 DESCRIPTOR.message_types_by_name['ACommand'] = _ACOMMAND
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
-
-UPickupRes = _reflection.GeneratedProtocolMessageType('UPickupRes', (_message.Message,), dict(
-  DESCRIPTOR = _UPICKUPRES,
-  __module__ = 'U2A_pb2'
-  # @@protoc_insertion_point(class_scope:UPickupRes)
-  ))
-_sym_db.RegisterMessage(UPickupRes)
 
 UArrived = _reflection.GeneratedProtocolMessageType('UArrived', (_message.Message,), dict(
   DESCRIPTOR = _UARRIVED,

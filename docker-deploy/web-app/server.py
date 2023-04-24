@@ -33,7 +33,8 @@ def worldProcess(world_ip, world_port):
         if msg is None:
             break
         else:
-            threadPool.submit(handlewResp,(session_factory(), msg))
+            # print("######", msg)
+            threadPool.submit(handlewResp, session_factory(), msg, fdW)
 
 def AmazonProcess(amazon_addr, ups_port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -46,7 +47,7 @@ def AmazonProcess(amazon_addr, ups_port):
         if msg is None:
             fdA.close()
         else:
-            threadPool.submit(handleAMsg,(session_factory(), msg, fdW, ))
+            threadPool.submit(handleAMsg, session_factory(), msg, fdW)
 
 def clientProcess(client_ip, client_port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -63,8 +64,7 @@ def clientProcess(client_ip, client_port):
             pass
 
 def server():
-    global session_factory
-    global fdW
+    global session_factory, fdW
     engine = initDB()
     session_factory = scoped_session(sessionmaker(bind=engine))
 
@@ -75,6 +75,11 @@ def server():
     amazon = threading.Thread(target=AmazonProcess, args=(AMZ_ADDR, AMZ_PORT, ))
     world.start()
     amazon.start()
+
+    send_UGoPickup(session_factory(), fdW, 1)
+    send_UGoDeliver(session_factory(), fdW, 1)
+    send_UQuery(fdW, 10)
+    print("*****************", ack_set)
 
     world.join()
     amazon.join()

@@ -8,9 +8,9 @@ from google.protobuf.internal.encoder import _EncodeVarint
 @Return : void
 '''
 def send_msg(socketfd, msg):
-    msg = msg.SerializeToString()
-    _EncodeVarint(socketfd.send, len(msg), None)
-    socketfd.sendall(msg)
+    string_msg = msg.SerializeToString()
+    _EncodeVarint(socketfd.send, len(string_msg), None)
+    socketfd.sendall(string_msg)
 
 '''
 @Desc   : receive msg from specific socket
@@ -24,7 +24,6 @@ def recv_msg(socket):
             buf = socket.recv(1)
             var_int_buff += buf
             msg_len, new_pos = _DecodeVarint32(var_int_buff, 0)
-            print(msg_len)
             if new_pos != 0:
                 break
         except:

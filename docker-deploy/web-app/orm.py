@@ -18,6 +18,7 @@ class PackageStatusEnum(enum.Enum):
 class Truck(Base):
     __tablename__ = 'truck'
     truck_id = Column(Integer, primary_key = True)
+    whid = Column(Integer, nullable=True, default=None)
     location_x = Column(Integer)
     location_y = Column(Integer)
     status = Column(Enum(TruckStatusEnum))
@@ -25,6 +26,7 @@ class Truck(Base):
     def dto(self):
         ans = dict()
         ans['truck_id'] = self.truck_id
+        ans['whid'] = self.whid
         ans['location_x'] = self.location_x
         ans['location_y'] = self.location_y
         ans['status'] = self.status
