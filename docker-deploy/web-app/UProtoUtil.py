@@ -82,6 +82,7 @@ def reconnect_to_world(world_socket, world_id):
 def send_UGoPickup(session, world_socket, whid):
     ucommands = world_ups_pb2.UCommands()
     ucommands.disconnect = False
+    ucommands.simspeed = 400
     pickup = ucommands.pickups.add()
     pickup.whid = whid
     pickup.seqnum = get_seqnum()
@@ -95,6 +96,9 @@ def send_UGoPickup(session, world_socket, whid):
             return -1
     truckid = truck.truck_id
     pickup.truckid = truckid
+    truck.status = TruckStatusEnum.driveWH
+    truck.whid = whid
+    session.commit()
 
     while(True):
         #send UCommand to the world
@@ -111,8 +115,6 @@ def send_UGoPickup(session, world_socket, whid):
         print(" Sent UCommand go pick up, not received by world " + str(pickup.seqnum))
     
     #update the status of this truck to driveWH
-    truck.status = TruckStatusEnum.driveWH
-    session.commit()
     return truckid
 
 '''
@@ -124,13 +126,15 @@ def send_UGoDeliver(session, world_socket, truckid):
     ucommands = world_ups_pb2.UCommands()
     ucommands.disconnect = False
     delivery = ucommands.deliveries.add()
+    print(truckid)
     delivery.truckid = truckid
     delivery.seqnum = get_seqnum()
-
+    print("received go delivery")
     # Find all the packages which status are 'loaded' and truck_id is truckid 
     packages = session.query(Package).filter_by(status=PackageStatusEnum.loaded, truck_id=truckid)
-
+    
     for package in packages.all():
+        print(package.dto())
         delivery_location = delivery.packages.add()
         delivery_location.packageid = package.package_id
         delivery_location.x = package.location_x
@@ -242,7 +246,7 @@ def sendAckBack(worldResp, fdW):
 def handlewResp(session, msg, fdW):
     worldResp = parseWResp(msg)
     sendAckBack(worldResp, fdW)
-
+    print("!!!!! WORLD RESP", worldResp)
     for completion in worldResp.completions:
         handleUFinished(session, completion)
         
@@ -264,15 +268,19 @@ def handlewResp(session, msg, fdW):
 @Return : 
 '''
 def handleUFinished(session, completion):
-    truck = session.query(Truck).filter_by(Truck.truck_id==completion.truckid).first()
+    truck = session.query(Truck).filter_by(truck_id = completion.truckid).first()
     if completion.status == "ARRIVE WAREHOUSE":
         truck.status = TruckStatusEnum.arriveWH
         session.commit()
-        AProtoUtil.send_UArrived(truck.truckid)
+        print(1)
+        print("Truck ID: ", completion.truckid)
+        print(truck.whid)
+        AProtoUtil.send_UArrived(completion.truckid, truck.whid)
+        print(2)
     else:
         truck.status = TruckStatusEnum.idle
         session.commit()
-
+    print(3)
 
 '''
 @Desc   : handle the UDeliveryMade response from world, change package status, forward to amazon
@@ -280,7 +288,7 @@ def handleUFinished(session, completion):
 @Return :
 '''
 def handleUDeliveryMade(session, delivery):
-    package = session.query(Package).filter_by(Package.package_id == delivery.packageid).first()
+    package = session.query(Package).filter_by(package_id = delivery.packageid).first()
     package.status = PackageStatusEnum.complete
     session.commit()
     AProtoUtil.send_UDelivered(package.package_id)

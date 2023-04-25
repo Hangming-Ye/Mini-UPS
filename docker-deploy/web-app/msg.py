@@ -8,6 +8,7 @@ from google.protobuf.internal.encoder import _EncodeVarint
 @Return : void
 '''
 def send_msg(socketfd, msg):
+    print("send", msg)
     string_msg = msg.SerializeToString()
     _EncodeVarint(socketfd.send, len(string_msg), None)
     socketfd.sendall(string_msg)
@@ -29,7 +30,15 @@ def recv_msg(socket):
         except:
             whole_message = None
             return whole_message
+    print("!message len", msg_len)
     whole_message = socket.recv(msg_len)
+    msg = bytearray(whole_message)
+    print(type(whole_message))
+    while len(msg) != msg_len:
+        print("fuck socket")
+        tmp = socket.recv(msg_len-len(msg))
+        msg.extend(bytearray(tmp))
+    whole_message = bytes(msg)
     return whole_message
 
 '''

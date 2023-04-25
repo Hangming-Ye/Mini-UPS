@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from orm import *
 
 def connectDB():
-    return create_engine("postgresql+psycopg2://postgres:passw0rd@0.0.0.0:5432/UPSDB",future=True, echo=True)
+    return create_engine("postgresql+psycopg2://postgres:passw0rd@0.0.0.0:5432/UPSDB",future=True)
 
 def createAllTable(engine):
     Base.metadata.create_all(engine)

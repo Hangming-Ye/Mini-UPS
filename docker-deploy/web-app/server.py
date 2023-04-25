@@ -12,12 +12,13 @@ from AProtoUtil import *
 from UProtoUtil import *
 from queue import Queue
 import threading
+import time
 
 WORLD_PORT = 12345
 AMZ_PORT = 11111
 UPS_PORT = 22222
 CLIENT_PORT = 33333
-AMZ_ADDR = "0.0.0.0"
+AMZ_ADDR = "vcm-32434.vm.duke.edu"
 TruckNum = 100
 threadPool = ThreadPoolExecutor(40)
 seq = 0
@@ -44,6 +45,7 @@ def AmazonProcess(amazon_addr, ups_port):
     while True:
         fdA, addr = sock.accept()
         msg = recv_msg(fdA)
+        fdA.close()
         if msg is None:
             fdA.close()
         else:
@@ -72,13 +74,13 @@ def server():
     world_id = connectWorld(session_factory(), fdW, TruckNum, None)
 
     world = threading.Thread(target=worldProcess, args=('0.0.0.0', WORLD_PORT,))
-    amazon = threading.Thread(target=AmazonProcess, args=(AMZ_ADDR, AMZ_PORT, ))
+    amazon = threading.Thread(target=AmazonProcess, args=(AMZ_ADDR, UPS_PORT, ))
     world.start()
     amazon.start()
 
-    send_UGoPickup(session_factory(), fdW, 1)
-    send_UGoDeliver(session_factory(), fdW, 1)
-    send_UQuery(fdW, 10)
+    time.sleep(10)
+    fd = connectToServer(AMZ_ADDR, AMZ_PORT)
+    fd.close()
     print("*****************", ack_set)
 
     world.join()

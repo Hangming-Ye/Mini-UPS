@@ -14,8 +14,10 @@ from UProtoUtil import *
 @Return : proto object Acommand message
 '''
 def parseAMsg(msg):
+    print("received from amazon request", msg)
     amazonMsg = U2A.ACommand()
     amazonMsg.ParseFromString(msg)
+    print("parsed", amazonMsg)
     return amazonMsg
 
 
@@ -25,7 +27,8 @@ def parseAMsg(msg):
 @Return :
 '''
 def handleAMsg(session, AMsg, fdW):
-    AMsg = parseWResp(AMsg)
+    AMsg = parseAMsg(AMsg)
+    print("Parsed message", AMsg)
     for pickup in AMsg.pickups:
         handleAPickup(session, pickup, fdW)
         
@@ -53,15 +56,21 @@ def handleAPickup(session, pickup, fdW):
 @Return :
 '''
 def handleALoad(session, load):
-    for item in load.ItemInfo:
-        item_id = item.item_id
+    print("load start")
+    for item in load.itemInfo:
+        print("!!!!!!!!!", item)
+        item_id = item.itemid
         num = item.num
         name = item.name
         desc = item.desc
-    pack = Package(package_id = load.package_id, status = PackageStatusEnum.loaded, location_x = load.location_x, 
+        print("^^^^^", item)
+    print("name", name)
+    pack = Package(package_id = load.packageid, status = PackageStatusEnum.loaded, location_x = load.location_x, 
                    location_y = load.location_y, truck_id = load.truckid, email = load.email, 
                    item_id = item_id, item_num = num, item_name = name, item_desc = desc)
+    print(pack.dto())
     session.add(pack)
+    print("load complete")
     session.commit()
 
 
@@ -70,7 +79,7 @@ def handleALoad(session, load):
 @Arg    :
 @Return :
 '''
-def handleALoadComplete(session, loadComplete, fdW, fdA):
+def handleALoadComplete(session, loadComplete, fdW):
     send_UGoDeliver(session, fdW, loadComplete.truckid)
 
 
@@ -79,12 +88,13 @@ def handleALoadComplete(session, loadComplete, fdW, fdA):
 @Arg    :
 @Return :
 '''
-def send_UArrived(truckid,whid):
+def send_UArrived(truckid, whid):
     ucommand = U2A_pb2.UCommand()
     arrived = ucommand.uarrived.add()
     arrived.truckid = truckid
     arrived.whid = whid
     arrived.seqnum = get_seqnum()
+    print(3, ucommand)
     amazon_socket = connectToServer(server.AMZ_ADDR, server.AMZ_PORT)
     send_msg(amazon_socket, ucommand)
     amazon_socket.close()
