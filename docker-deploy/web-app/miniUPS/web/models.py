@@ -1,13 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-import enum
 
-class TruckStatusEnum(enum.Enum):
-    idle = 1
-    driveWH = 2
-    arriveWH = 3
-    delivering = 4
-# Create your models here.
 class myUser(User):
     def __str__(self):
         return str(self.id)
@@ -15,13 +8,16 @@ class myUser(User):
 class Truck(models.Model):
     __tablename__ = 'truck'
 
+    class Meta:
+       managed = False
+       db_table = "truck"
 
     STATUS_CHOICE = (("idle", "idle"), ("driveWH", "driveWH"), ("arriveWH", "arriveWH"), ("delivering", "delivering"))
     truck_id = models.IntegerField(primary_key=True)
     whid = models.IntegerField(null=True, default=None)
     location_x = models.IntegerField()
     location_y = models.IntegerField()
-    status = models.CharField(choices=STATUS_CHOICE)
+    status = models.CharField(choices=STATUS_CHOICE, max_length = 128)
 
     def dto(self):
         ans = dict()
@@ -32,15 +28,34 @@ class Truck(models.Model):
         ans['status'] = self.status
         return ans
 
-class Package(Base):
+class Package(models.Model):
     __tablename__ = 'package'
-    package_id = Column(Integer, primary_key = True)
-    status = Column(Enum(PackageStatusEnum))
-    location_x = Column(Integer, nullable=True, default=None)
-    location_y = Column(Integer, nullable=True, default=None)
-    truck_id = Column(Integer, ForeignKey('truck.truck_id',ondelete="SET NULL", onupdate="CASCADE"))
-    email = Column(String(256))
-    item_id = Column(Integer)
-    item_num = Column(Integer)
-    item_name = Column(String(256))
-    item_desc = Column(String(512))
+
+    class Meta:
+       managed = False
+       db_table = "package"
+
+    STATUS_CHOICE = (("loaded", "loaded"), ("delivering", "delivering"), ("complete", "complete"))
+    package_id = models.IntegerField(primary_key=True)
+    status = models.CharField(choices=STATUS_CHOICE, max_length = 128)
+    location_x = models.IntegerField()
+    location_y = models.IntegerField()
+    truck_id = models.IntegerField()
+    email = models.CharField(max_length=256)
+    item_id = models.IntegerField()
+    item_num = models.IntegerField()
+    item_name = models.CharField(max_length=256)
+    item_desc = models.CharField(max_length=512)
+
+    def dto(self):
+        ans = dict()
+        ans['package_id'] = self.package_id
+        ans['status'] = self.status
+        ans['location_x'] = self.location_x
+        ans['location_y'] = self.location_y
+        ans['truck_id'] = self.truck_id
+        ans['item_id'] = self.item_id
+        ans['item_num'] = self.item_num
+        ans['item_name'] = self.item_name
+        ans['item_desc'] = self.item_desc
+        return ans

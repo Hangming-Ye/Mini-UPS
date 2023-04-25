@@ -68,7 +68,7 @@ message AError{
 //Amazon command packet
 message ACommand {
   repeated APickupReq pickups = 1;
-  repeated ALoad toload = 2; 
+  repeated ALoad toload = 2;
   repeated ALoadComplete comp = 3;
   repeated AError error = 4;
 }

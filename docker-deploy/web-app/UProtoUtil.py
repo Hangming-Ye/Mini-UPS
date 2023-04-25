@@ -93,12 +93,20 @@ def send_UGoPickup(session, world_socket, whid):
         truck = session.query(Truck).filter_by(status=TruckStatusEnum.delivering).first()
         if not truck:
             server.waitlist.put(whid)
+            print("!!!! wait list", server.waitlist)
             return -1
+        else:
+            truck.status = TruckStatusEnum.driveWH
+            truck.whid = whid
+            session.commit()
+            print("&&&&&", truck.dto())
+    else:
+        truck.status = TruckStatusEnum.driveWH
+        truck.whid = whid
+        session.commit()
+        print("$$$$$$", truck.dto())
     truckid = truck.truck_id
     pickup.truckid = truckid
-    truck.status = TruckStatusEnum.driveWH
-    truck.whid = whid
-    session.commit()
 
     while(True):
         #send UCommand to the world
@@ -165,6 +173,7 @@ def send_UGoDeliver(session, world_socket, truckid):
 
     if not server.waitlist.empty():
         whid = server.waitlist.get()
+        print("process wait list", whid)
         send_UGoPickup(session, world_socket, whid)
 
 '''

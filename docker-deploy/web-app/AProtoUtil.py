@@ -58,17 +58,13 @@ def handleAPickup(session, pickup, fdW):
 def handleALoad(session, load):
     print("load start")
     for item in load.itemInfo:
-        print("!!!!!!!!!", item)
         item_id = item.itemid
         num = item.num
         name = item.name
         desc = item.desc
-        print("^^^^^", item)
-    print("name", name)
     pack = Package(package_id = load.packageid, status = PackageStatusEnum.loaded, location_x = load.location_x, 
                    location_y = load.location_y, truck_id = load.truckid, email = load.email, 
                    item_id = item_id, item_num = num, item_name = name, item_desc = desc)
-    print(pack.dto())
     session.add(pack)
     print("load complete")
     session.commit()

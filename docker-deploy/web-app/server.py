@@ -68,7 +68,7 @@ def clientProcess(client_ip, client_port):
 def server():
     global session_factory, fdW
     engine = initDB()
-    session_factory = scoped_session(sessionmaker(bind=engine))
+    session_factory = scoped_session(sessionmaker(bind=engine, expire_on_commit=False))
 
     fdW = connectToServer("0.0.0.0", WORLD_PORT)
     world_id = connectWorld(session_factory(), fdW, TruckNum, None)
