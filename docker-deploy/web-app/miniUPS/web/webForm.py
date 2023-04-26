@@ -4,16 +4,16 @@ from .models import *
 from django.utils.translation import gettext_lazy as _
 
 class registerForm(ModelForm):
-    re_password = forms.CharField(required=True)
+    retype_password = forms.CharField(required=True)
     class Meta:
         model = myUser
-        fields = ['username', 'email', 'password', 're_password']
+        fields = ['username', 'email', 'password', 'retype_password']
 
         labels = {
             'username': _('Username'),
             'email': _('Email Address'),
             'password': _('Password'),
-            're_password': _('Retype Password'),
+            'retype_password': _('Retype Password'),
         }
 
         help_texts = {
@@ -42,7 +42,7 @@ class modifyProfile(ModelForm):
             'password': _('Password'),
         }
 
-class queryPackage(ModelForm):
+class queryForm(ModelForm):
     class Meta:
         model = Package
         fields = ['package_id']

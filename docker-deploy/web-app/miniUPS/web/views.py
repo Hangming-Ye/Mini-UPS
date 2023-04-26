@@ -10,7 +10,20 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 def query(request):
-    pass
+    for package in Package.objects.all():
+        print(package.dto())
+    if request.method == 'POST':
+        form = queryForm(request.POST)
+        package_id = request.POST.get('package_id')
+        package = Package.objects.filter(package_id = package_id)
+        print("!!!!", package)
+        if package:
+            return redirect('/index/', {'package': package[0]})
+        else:
+            return render(request, 'form.html', {'form': form,'error':"package doesn't exist"})
+    else:
+        form = queryForm()
+        return render(request, 'form.html', {'form': form})
 
 def register(request):
     if request.method == 'POST':
@@ -26,7 +39,7 @@ def register(request):
             user.save()
             return redirect('/login/')
         else:
-            return render(request, 'form.html', {'form': form,'error':"input is invalid"})
+            return render(request, 'form.html', {'form': form,'error':"user name already exist"})
     else:
         form = registerForm()
         return render(request, 'form.html', {'form': form})
@@ -39,12 +52,12 @@ def login(request):
         if User.objects.filter(username=username):
             user = auth.authenticate(username=username, password=password)
             if user is not None:
-                return redirect('/index/', {'user', user})
+                return redirect('/index/', {'user': user})
             else:
                 print("auth failed")
-                return render(request, 'form.html', {'form': form,'error':"user not exist"})
+                return render(request, 'form.html', {'form': form,'error':"password is incorrect"})
         else:
-            return render(request, 'form.html', {'form': form,'error':"password is in correct"})
+            return render(request, 'form.html', {'form': form,'error':"user not exist"})
     else:
         form = loginForm()
         return render(request, 'form.html', {'form': form})
@@ -52,6 +65,12 @@ def login(request):
 @login_required
 def profile(request):
     pass
+
+
+@login_required
+def changeProfile(request):
+    pass
+
 
 def logout(request):
     if request.user.is_authenticated:
@@ -62,5 +81,5 @@ def changeLoc(request):
     pass
 
 def detail(request):
-    pass
+    pakcage_id = request.package_id
 
