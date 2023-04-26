@@ -7,6 +7,8 @@ import AProtoUtil
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
 import server
+import smtplib
+from email.mime.text import MIMEText
 
 '''
 @Desc   :Connect to the world and initialize trucks
@@ -301,6 +303,7 @@ def handleUDeliveryMade(session, delivery):
     package.status = PackageStatusEnum.complete
     session.commit()
     AProtoUtil.send_UDelivered(package.package_id)
+    send_email(session, delivery.packageid)
     
 
 '''
@@ -326,3 +329,29 @@ def get_seqnum() -> int:
     server.seq += 1
     server.seqLock.release()
     return ans
+
+def send_email(session, packageid):
+    package = session.query(Package).filter_by(package_id = packageid).first()
+    smtp_server = 'smtp.gmail.com'
+    smtp_port = 587
+    from_email = 'sender@gmail.com'
+    passw = '123'
+    to_email = str(package.email)
+    
+    context = "Dear constomer:\n\nYour package " + str(packageid) + " has arrived, please check it!\n"\
+                    + "If you have any question, please do not hesitate to contact us. Enjoy your day!\n\nUPS service center"
+
+    message = MIMEText(context, 'plain','utf-8')
+    message['Subject'] = 'UPS Delivered Confirmation' 
+    message['From'] = from_email    
+    message['To'] = to_email  
+
+    try:
+        email_server = smtplib.SMTP(smtp_server, smtp_port) 
+        email_server.starttls()
+        email_server.login(from_email, passw) 
+        email_server.sendmail(from_email,to_email,message.as_string()) 
+        email_server.quit() 
+        print('success')
+    except smtplib.SMTPException as e:
+        print('error:',e) 

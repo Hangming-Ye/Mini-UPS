@@ -10,8 +10,10 @@ def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 def query(request):
+    '''
     for package in Package.objects.all():
         print(package.dto())
+    '''
     if request.method == 'POST':
         form = queryForm(request.POST)
         package_id = request.POST.get('package_id')
@@ -69,17 +71,68 @@ def profile(request):
 
 @login_required
 def changeProfile(request):
-    pass
+    if request.method == 'POST':
+        form = modifyProfile(request.POST)
+        password = request.POST.get('password')
+        re_password = request.POST.get('re_password')
+        if password == re_password:
+            return redirect('change-profile-done')
+        else:
+            return render(request, 'form.html', {'form': form,'error':"Passwords don't match!"})
+    else:
+        form = modifyProfile()
+        return render(request, 'form.html', {'form': form})
 
+def changedone(request):
+    return HttpResponse("You've already changed your profile.")
+    """
+    return rediect('profile')
+    """
 
 def logout(request):
     if request.user.is_authenticated:
         auth.logout(request)
     return redirect('/login/')
 
-def changeLoc(request):
+def changeLoc(request, package_id):
     pass
 
-def detail(request):
-    pakcage_id = request.package_id
+"""
+enter email version
+another: get packlist directly after logged-in
+"""
+def packlist(request):
+    if request.method == 'POST':
+        form = Packlistform(request.POST)
+        user_email = request.POST.get('email') 
+        packages = Package.objects.filter(email=user_email) 
+        if packages:
+            package_list = [{'id': package.id, 'status': package.status} for package in packages]
+            context = {'package_list': package_list}
+            return render(request, 'package_list.html', context)
+        else:
+            return render(request, 'form.html', {'form': form,'error':"email doesn't exist"})
+    else:
+        form = Packlistform()
+        return render(request, 'form.html', {'form': form})
+
+def detail(request, package_id):
+    package = Package.objects.filter(package_id=package_id) 
+    context = {'package': package}
+    return render(request, 'package_detail.html', context)
+
+def getLoc(request):
+    if request.method == 'POST':
+        form = getLocform(request.POST)
+        user_id = request.POST.get('user_id') 
+        addresses = Address.objects.filter(owner_id=user_id) 
+        if addresses:
+            context = {'addresses': addresses}
+            return render(request, 'package_list.html', context)
+        else:
+            return render(request, 'form.html', {'form': form,'error':"user id doesn't exist"})
+    else:
+        form = getLocform()
+        return render(request, 'form.html', {'form': form})
+
 

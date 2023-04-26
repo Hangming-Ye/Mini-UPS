@@ -4,7 +4,16 @@ from django.contrib.auth.models import User
 class myUser(User):
     def __str__(self):
         return str(self.id)
-
+    
+class Address(models.Model):
+    id = models.IntegerField(primary_key=True)
+    location_x = models.IntegerField()
+    location_y = models.IntegerField()
+    name = models.CharField(max_length=255)
+    owner_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
+    
 class Truck(models.Model):
     __tablename__ = 'truck'
 
