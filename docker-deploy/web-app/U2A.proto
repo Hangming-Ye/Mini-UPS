@@ -1,6 +1,6 @@
 syntax = "proto2";
-
-//UPS arrived notification 
+package edu.duke.ece568.miniups;
+//UPS arrived notification
 message UArrived{
 	required int32 truckid = 1;
 	required int32 whid = 2;
@@ -20,12 +20,7 @@ message UError{
 	required int64 seqnum = 3;
 }
 
-//UPS command packet
-message UCommand {
-	repeated UArrived uarrived = 1;
-	repeated UDelivered udelivered = 2;
-	repeated UError uerror = 3;
-}
+
 
 //pick up request from amazon
 message APickupReq{
@@ -43,13 +38,19 @@ message AItem{
 //Amazon load request for a specific package
 message ALoad{
 	required int32 truckid = 1;
-	required int32 hid = 2;
-	required int64 packageid = 3;
-	required int32 location_x = 4;
-	required int32 location_y = 5;
-	required int64 seqnum = 6;
-	required string email = 7;
-	repeated AItem itemInfo = 8;
+	required int64 packageid = 2;
+	required int64 seqnum = 3;
+}
+
+//Amazon create package request
+message ACreatePackage{
+  	required int32 hid = 1;
+  	required int64 packageid = 2;
+  	required int32 location_x = 3;
+  	required int32 location_y = 4;
+  	required int64 seqnum = 5;
+  	required string email = 6;
+  	repeated AItem itemInfo = 7;
 }
 
 //Amazon Complete Load
@@ -67,8 +68,16 @@ message AError{
 
 //Amazon command packet
 message ACommand {
-  repeated APickupReq pickups = 1;
-  repeated ALoad toload = 2;
-  repeated ALoadComplete comp = 3;
-  repeated AError error = 4;
+	repeated APickupReq pickups = 1;
+	repeated ALoad toload = 2;
+	repeated ALoadComplete comp = 3;
+  	repeated ACreatePackage create = 4;
+	repeated AError error = 5;
+}
+
+//UPS command packet
+message UCommand {
+	repeated UArrived uarrived = 1;
+	repeated UDelivered udelivered = 2;
+	repeated UError uerror = 3;
 }

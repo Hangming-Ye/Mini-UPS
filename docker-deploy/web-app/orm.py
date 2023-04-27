@@ -11,9 +11,10 @@ class TruckStatusEnum(enum.Enum):
     delivering = 4
 
 class PackageStatusEnum(enum.Enum):
-    loaded = 1
-    delivering = 2
-    complete = 3
+    created = 1
+    loaded = 2
+    delivering = 3
+    complete = 4
 
 class Truck(Base):
     __tablename__ = 'truck'
@@ -38,7 +39,7 @@ class Package(Base):
     status = Column(Enum(PackageStatusEnum))
     location_x = Column(Integer, nullable=True, default=None)
     location_y = Column(Integer, nullable=True, default=None)
-    truck_id = Column(Integer, ForeignKey('truck.truck_id',ondelete="SET NULL", onupdate="CASCADE"))
+    truck_id = Column(Integer, nullable=True, default=None)
     email = Column(String(256))
     item_id = Column(Integer)
     item_num = Column(Integer)

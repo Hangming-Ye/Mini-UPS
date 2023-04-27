@@ -38,6 +38,9 @@ def handleAMsg(session, AMsg, fdW):
     for loadComplete in AMsg.comp:
         handleALoadComplete(session, loadComplete, fdW)
 
+    for createpck in AMsg.create:
+        handleACreatePackage(session, createpck)
+
     for err in AMsg.error:
         print(err)
 
@@ -57,16 +60,9 @@ def handleAPickup(session, pickup, fdW):
 '''
 def handleALoad(session, load):
     print("load start")
-    for item in load.itemInfo:
-        item_id = item.itemid
-        num = item.num
-        name = item.name
-        desc = item.desc
-    pack = Package(package_id = load.packageid, status = PackageStatusEnum.loaded, location_x = load.location_x, 
-                   location_y = load.location_y, truck_id = load.truckid, email = load.email, 
-                   item_id = item_id, item_num = num, item_name = name, item_desc = desc)
-    session.add(pack)
-    print("load complete")
+    pack = session.query(Package).filter_by(package_id = load.packageid).one()
+    pack.truck_id = load.truckid
+    print("loaded")
     session.commit()
 
 
@@ -77,6 +73,20 @@ def handleALoad(session, load):
 '''
 def handleALoadComplete(session, loadComplete, fdW):
     send_UGoDeliver(session, fdW, loadComplete.truckid)
+
+def handleACreatePackage(session, createpck):
+    print("Create Package begin\n")
+    for item in createpck.itemInfo:
+        item_id = item.itemid
+        num = item.num
+        name = item.name
+        desc = item.desc
+    pack = Package(package_id = createpck.packageid, status = PackageStatusEnum.created, location_x = createpck.location_x, 
+                   location_y = createpck.location_y, email = createpck.email, 
+                   item_id = item_id, item_num = num, item_name = name, item_desc = desc)
+    session.add(pack)
+    session.commit()
+    print("Created Package\n")
 
 
 '''
