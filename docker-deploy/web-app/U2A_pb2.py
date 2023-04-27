@@ -16,10 +16,10 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='U2A.proto',
-  package='',
+  package='edu.duke.ece568.miniups',
   syntax='proto2',
   serialized_options=None,
-  serialized_pb=_b('\n\tU2A.proto\"9\n\x08UArrived\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0c\n\x04whid\x18\x02 \x02(\x05\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"/\n\nUDelivered\x12\x11\n\tpackageid\x18\x01 \x02(\x03\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"3\n\x06UError\x12\x0c\n\x04\x63ode\x18\x01 \x02(\x05\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"a\n\x08UCommand\x12\x1b\n\x08uarrived\x18\x01 \x03(\x0b\x32\t.UArrived\x12\x1f\n\nudelivered\x18\x02 \x03(\x0b\x32\x0b.UDelivered\x12\x17\n\x06uerror\x18\x03 \x03(\x0b\x32\x07.UError\")\n\nAPickupReq\x12\x0b\n\x03hid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"@\n\x05\x41Item\x12\x0e\n\x06itemid\x18\x01 \x02(\x05\x12\x0b\n\x03num\x18\x02 \x02(\x05\x12\x0c\n\x04name\x18\x03 \x02(\t\x12\x0c\n\x04\x64\x65sc\x18\x04 \x02(\t\"\x99\x01\n\x05\x41Load\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0b\n\x03hid\x18\x02 \x02(\x05\x12\x11\n\tpackageid\x18\x03 \x02(\x03\x12\x12\n\nlocation_x\x18\x04 \x02(\x05\x12\x12\n\nlocation_y\x18\x05 \x02(\x05\x12\x0e\n\x06seqnum\x18\x06 \x02(\x03\x12\r\n\x05\x65mail\x18\x07 \x02(\t\x12\x18\n\x08itemInfo\x18\x08 \x03(\x0b\x32\x06.AItem\"0\n\rALoadComplete\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"3\n\x06\x41\x45rror\x12\x0c\n\x04\x63ode\x18\x01 \x02(\x05\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"v\n\x08\x41\x43ommand\x12\x1c\n\x07pickups\x18\x01 \x03(\x0b\x32\x0b.APickupReq\x12\x16\n\x06toload\x18\x02 \x03(\x0b\x32\x06.ALoad\x12\x1c\n\x04\x63omp\x18\x03 \x03(\x0b\x32\x0e.ALoadComplete\x12\x16\n\x05\x65rror\x18\x04 \x03(\x0b\x32\x07.AError')
+  serialized_pb=_b('\n\tU2A.proto\x12\x17\x65\x64u.duke.ece568.miniups\"9\n\x08UArrived\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0c\n\x04whid\x18\x02 \x02(\x05\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"/\n\nUDelivered\x12\x11\n\tpackageid\x18\x01 \x02(\x03\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"3\n\x06UError\x12\x0c\n\x04\x63ode\x18\x01 \x02(\x05\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\")\n\nAPickupReq\x12\x0b\n\x03hid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"@\n\x05\x41Item\x12\x0e\n\x06itemid\x18\x01 \x02(\x05\x12\x0b\n\x03num\x18\x02 \x02(\x05\x12\x0c\n\x04name\x18\x03 \x02(\t\x12\x0c\n\x04\x64\x65sc\x18\x04 \x02(\t\";\n\x05\x41Load\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x11\n\tpackageid\x18\x02 \x02(\x03\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"\xa9\x01\n\x0e\x41\x43reatePackage\x12\x0b\n\x03hid\x18\x01 \x02(\x05\x12\x11\n\tpackageid\x18\x02 \x02(\x03\x12\x12\n\nlocation_x\x18\x03 \x02(\x05\x12\x12\n\nlocation_y\x18\x04 \x02(\x05\x12\x0e\n\x06seqnum\x18\x05 \x02(\x03\x12\r\n\x05\x65mail\x18\x06 \x02(\t\x12\x30\n\x08itemInfo\x18\x07 \x03(\x0b\x32\x1e.edu.duke.ece568.miniups.AItem\"0\n\rALoadComplete\x12\x0f\n\x07truckid\x18\x01 \x02(\x05\x12\x0e\n\x06seqnum\x18\x02 \x02(\x03\"3\n\x06\x41\x45rror\x12\x0c\n\x04\x63ode\x18\x01 \x02(\x05\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12\x0e\n\x06seqnum\x18\x03 \x02(\x03\"\x8f\x02\n\x08\x41\x43ommand\x12\x34\n\x07pickups\x18\x01 \x03(\x0b\x32#.edu.duke.ece568.miniups.APickupReq\x12.\n\x06toload\x18\x02 \x03(\x0b\x32\x1e.edu.duke.ece568.miniups.ALoad\x12\x34\n\x04\x63omp\x18\x03 \x03(\x0b\x32&.edu.duke.ece568.miniups.ALoadComplete\x12\x37\n\x06\x63reate\x18\x04 \x03(\x0b\x32\'.edu.duke.ece568.miniups.ACreatePackage\x12.\n\x05\x65rror\x18\x05 \x03(\x0b\x32\x1f.edu.duke.ece568.miniups.AError\"\xa9\x01\n\x08UCommand\x12\x33\n\x08uarrived\x18\x01 \x03(\x0b\x32!.edu.duke.ece568.miniups.UArrived\x12\x37\n\nudelivered\x18\x02 \x03(\x0b\x32#.edu.duke.ece568.miniups.UDelivered\x12/\n\x06uerror\x18\x03 \x03(\x0b\x32\x1f.edu.duke.ece568.miniups.UError')
 )
 
 
@@ -27,27 +27,27 @@ DESCRIPTOR = _descriptor.FileDescriptor(
 
 _UARRIVED = _descriptor.Descriptor(
   name='UArrived',
-  full_name='UArrived',
+  full_name='edu.duke.ece568.miniups.UArrived',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='truckid', full_name='UArrived.truckid', index=0,
+      name='truckid', full_name='edu.duke.ece568.miniups.UArrived.truckid', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='whid', full_name='UArrived.whid', index=1,
+      name='whid', full_name='edu.duke.ece568.miniups.UArrived.whid', index=1,
       number=2, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='seqnum', full_name='UArrived.seqnum', index=2,
+      name='seqnum', full_name='edu.duke.ece568.miniups.UArrived.seqnum', index=2,
       number=3, type=3, cpp_type=2, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -65,27 +65,27 @@ _UARRIVED = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=13,
-  serialized_end=70,
+  serialized_start=38,
+  serialized_end=95,
 )
 
 
 _UDELIVERED = _descriptor.Descriptor(
   name='UDelivered',
-  full_name='UDelivered',
+  full_name='edu.duke.ece568.miniups.UDelivered',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='packageid', full_name='UDelivered.packageid', index=0,
+      name='packageid', full_name='edu.duke.ece568.miniups.UDelivered.packageid', index=0,
       number=1, type=3, cpp_type=2, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='seqnum', full_name='UDelivered.seqnum', index=1,
+      name='seqnum', full_name='edu.duke.ece568.miniups.UDelivered.seqnum', index=1,
       number=2, type=3, cpp_type=2, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -103,34 +103,34 @@ _UDELIVERED = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=72,
-  serialized_end=119,
+  serialized_start=97,
+  serialized_end=144,
 )
 
 
 _UERROR = _descriptor.Descriptor(
   name='UError',
-  full_name='UError',
+  full_name='edu.duke.ece568.miniups.UError',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='code', full_name='UError.code', index=0,
+      name='code', full_name='edu.duke.ece568.miniups.UError.code', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='msg', full_name='UError.msg', index=1,
+      name='msg', full_name='edu.duke.ece568.miniups.UError.msg', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='seqnum', full_name='UError.seqnum', index=2,
+      name='seqnum', full_name='edu.duke.ece568.miniups.UError.seqnum', index=2,
       number=3, type=3, cpp_type=2, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -148,72 +148,27 @@ _UERROR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=121,
-  serialized_end=172,
-)
-
-
-_UCOMMAND = _descriptor.Descriptor(
-  name='UCommand',
-  full_name='UCommand',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='uarrived', full_name='UCommand.uarrived', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='udelivered', full_name='UCommand.udelivered', index=1,
-      number=2, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='uerror', full_name='UCommand.uerror', index=2,
-      number=3, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=174,
-  serialized_end=271,
+  serialized_start=146,
+  serialized_end=197,
 )
 
 
 _APICKUPREQ = _descriptor.Descriptor(
   name='APickupReq',
-  full_name='APickupReq',
+  full_name='edu.duke.ece568.miniups.APickupReq',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='hid', full_name='APickupReq.hid', index=0,
+      name='hid', full_name='edu.duke.ece568.miniups.APickupReq.hid', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='seqnum', full_name='APickupReq.seqnum', index=1,
+      name='seqnum', full_name='edu.duke.ece568.miniups.APickupReq.seqnum', index=1,
       number=2, type=3, cpp_type=2, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -231,41 +186,41 @@ _APICKUPREQ = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=273,
-  serialized_end=314,
+  serialized_start=199,
+  serialized_end=240,
 )
 
 
 _AITEM = _descriptor.Descriptor(
   name='AItem',
-  full_name='AItem',
+  full_name='edu.duke.ece568.miniups.AItem',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='itemid', full_name='AItem.itemid', index=0,
+      name='itemid', full_name='edu.duke.ece568.miniups.AItem.itemid', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='num', full_name='AItem.num', index=1,
+      name='num', full_name='edu.duke.ece568.miniups.AItem.num', index=1,
       number=2, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='name', full_name='AItem.name', index=2,
+      name='name', full_name='edu.duke.ece568.miniups.AItem.name', index=2,
       number=3, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='desc', full_name='AItem.desc', index=3,
+      name='desc', full_name='edu.duke.ece568.miniups.AItem.desc', index=3,
       number=4, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -283,70 +238,108 @@ _AITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=316,
-  serialized_end=380,
+  serialized_start=242,
+  serialized_end=306,
 )
 
 
 _ALOAD = _descriptor.Descriptor(
   name='ALoad',
-  full_name='ALoad',
+  full_name='edu.duke.ece568.miniups.ALoad',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='truckid', full_name='ALoad.truckid', index=0,
+      name='truckid', full_name='edu.duke.ece568.miniups.ALoad.truckid', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='hid', full_name='ALoad.hid', index=1,
-      number=2, type=5, cpp_type=1, label=2,
+      name='packageid', full_name='edu.duke.ece568.miniups.ALoad.packageid', index=1,
+      number=2, type=3, cpp_type=2, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='packageid', full_name='ALoad.packageid', index=2,
+      name='seqnum', full_name='edu.duke.ece568.miniups.ALoad.seqnum', index=2,
       number=3, type=3, cpp_type=2, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=308,
+  serialized_end=367,
+)
+
+
+_ACREATEPACKAGE = _descriptor.Descriptor(
+  name='ACreatePackage',
+  full_name='edu.duke.ece568.miniups.ACreatePackage',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
     _descriptor.FieldDescriptor(
-      name='location_x', full_name='ALoad.location_x', index=3,
+      name='hid', full_name='edu.duke.ece568.miniups.ACreatePackage.hid', index=0,
+      number=1, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='packageid', full_name='edu.duke.ece568.miniups.ACreatePackage.packageid', index=1,
+      number=2, type=3, cpp_type=2, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='location_x', full_name='edu.duke.ece568.miniups.ACreatePackage.location_x', index=2,
+      number=3, type=5, cpp_type=1, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='location_y', full_name='edu.duke.ece568.miniups.ACreatePackage.location_y', index=3,
       number=4, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='location_y', full_name='ALoad.location_y', index=4,
-      number=5, type=5, cpp_type=1, label=2,
+      name='seqnum', full_name='edu.duke.ece568.miniups.ACreatePackage.seqnum', index=4,
+      number=5, type=3, cpp_type=2, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='seqnum', full_name='ALoad.seqnum', index=5,
-      number=6, type=3, cpp_type=2, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='email', full_name='ALoad.email', index=6,
-      number=7, type=9, cpp_type=9, label=2,
+      name='email', full_name='edu.duke.ece568.miniups.ACreatePackage.email', index=5,
+      number=6, type=9, cpp_type=9, label=2,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='itemInfo', full_name='ALoad.itemInfo', index=7,
-      number=8, type=11, cpp_type=10, label=3,
+      name='itemInfo', full_name='edu.duke.ece568.miniups.ACreatePackage.itemInfo', index=6,
+      number=7, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -363,27 +356,27 @@ _ALOAD = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=383,
-  serialized_end=536,
+  serialized_start=370,
+  serialized_end=539,
 )
 
 
 _ALOADCOMPLETE = _descriptor.Descriptor(
   name='ALoadComplete',
-  full_name='ALoadComplete',
+  full_name='edu.duke.ece568.miniups.ALoadComplete',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='truckid', full_name='ALoadComplete.truckid', index=0,
+      name='truckid', full_name='edu.duke.ece568.miniups.ALoadComplete.truckid', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='seqnum', full_name='ALoadComplete.seqnum', index=1,
+      name='seqnum', full_name='edu.duke.ece568.miniups.ALoadComplete.seqnum', index=1,
       number=2, type=3, cpp_type=2, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -401,34 +394,34 @@ _ALOADCOMPLETE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=538,
-  serialized_end=586,
+  serialized_start=541,
+  serialized_end=589,
 )
 
 
 _AERROR = _descriptor.Descriptor(
   name='AError',
-  full_name='AError',
+  full_name='edu.duke.ece568.miniups.AError',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='code', full_name='AError.code', index=0,
+      name='code', full_name='edu.duke.ece568.miniups.AError.code', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='msg', full_name='AError.msg', index=1,
+      name='msg', full_name='edu.duke.ece568.miniups.AError.msg', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='seqnum', full_name='AError.seqnum', index=2,
+      name='seqnum', full_name='edu.duke.ece568.miniups.AError.seqnum', index=2,
       number=3, type=3, cpp_type=2, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -446,42 +439,49 @@ _AERROR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=588,
-  serialized_end=639,
+  serialized_start=591,
+  serialized_end=642,
 )
 
 
 _ACOMMAND = _descriptor.Descriptor(
   name='ACommand',
-  full_name='ACommand',
+  full_name='edu.duke.ece568.miniups.ACommand',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='pickups', full_name='ACommand.pickups', index=0,
+      name='pickups', full_name='edu.duke.ece568.miniups.ACommand.pickups', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='toload', full_name='ACommand.toload', index=1,
+      name='toload', full_name='edu.duke.ece568.miniups.ACommand.toload', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='comp', full_name='ACommand.comp', index=2,
+      name='comp', full_name='edu.duke.ece568.miniups.ACommand.comp', index=2,
       number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='error', full_name='ACommand.error', index=3,
+      name='create', full_name='edu.duke.ece568.miniups.ACommand.create', index=3,
       number=4, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='error', full_name='edu.duke.ece568.miniups.ACommand.error', index=4,
+      number=5, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -498,99 +498,153 @@ _ACOMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=641,
-  serialized_end=759,
+  serialized_start=645,
+  serialized_end=916,
 )
 
-_UCOMMAND.fields_by_name['uarrived'].message_type = _UARRIVED
-_UCOMMAND.fields_by_name['udelivered'].message_type = _UDELIVERED
-_UCOMMAND.fields_by_name['uerror'].message_type = _UERROR
-_ALOAD.fields_by_name['itemInfo'].message_type = _AITEM
+
+_UCOMMAND = _descriptor.Descriptor(
+  name='UCommand',
+  full_name='edu.duke.ece568.miniups.UCommand',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='uarrived', full_name='edu.duke.ece568.miniups.UCommand.uarrived', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='udelivered', full_name='edu.duke.ece568.miniups.UCommand.udelivered', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='uerror', full_name='edu.duke.ece568.miniups.UCommand.uerror', index=2,
+      number=3, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=919,
+  serialized_end=1088,
+)
+
+_ACREATEPACKAGE.fields_by_name['itemInfo'].message_type = _AITEM
 _ACOMMAND.fields_by_name['pickups'].message_type = _APICKUPREQ
 _ACOMMAND.fields_by_name['toload'].message_type = _ALOAD
 _ACOMMAND.fields_by_name['comp'].message_type = _ALOADCOMPLETE
+_ACOMMAND.fields_by_name['create'].message_type = _ACREATEPACKAGE
 _ACOMMAND.fields_by_name['error'].message_type = _AERROR
+_UCOMMAND.fields_by_name['uarrived'].message_type = _UARRIVED
+_UCOMMAND.fields_by_name['udelivered'].message_type = _UDELIVERED
+_UCOMMAND.fields_by_name['uerror'].message_type = _UERROR
 DESCRIPTOR.message_types_by_name['UArrived'] = _UARRIVED
 DESCRIPTOR.message_types_by_name['UDelivered'] = _UDELIVERED
 DESCRIPTOR.message_types_by_name['UError'] = _UERROR
-DESCRIPTOR.message_types_by_name['UCommand'] = _UCOMMAND
 DESCRIPTOR.message_types_by_name['APickupReq'] = _APICKUPREQ
 DESCRIPTOR.message_types_by_name['AItem'] = _AITEM
 DESCRIPTOR.message_types_by_name['ALoad'] = _ALOAD
+DESCRIPTOR.message_types_by_name['ACreatePackage'] = _ACREATEPACKAGE
 DESCRIPTOR.message_types_by_name['ALoadComplete'] = _ALOADCOMPLETE
 DESCRIPTOR.message_types_by_name['AError'] = _AERROR
 DESCRIPTOR.message_types_by_name['ACommand'] = _ACOMMAND
+DESCRIPTOR.message_types_by_name['UCommand'] = _UCOMMAND
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 UArrived = _reflection.GeneratedProtocolMessageType('UArrived', (_message.Message,), dict(
   DESCRIPTOR = _UARRIVED,
   __module__ = 'U2A_pb2'
-  # @@protoc_insertion_point(class_scope:UArrived)
+  # @@protoc_insertion_point(class_scope:edu.duke.ece568.miniups.UArrived)
   ))
 _sym_db.RegisterMessage(UArrived)
 
 UDelivered = _reflection.GeneratedProtocolMessageType('UDelivered', (_message.Message,), dict(
   DESCRIPTOR = _UDELIVERED,
   __module__ = 'U2A_pb2'
-  # @@protoc_insertion_point(class_scope:UDelivered)
+  # @@protoc_insertion_point(class_scope:edu.duke.ece568.miniups.UDelivered)
   ))
 _sym_db.RegisterMessage(UDelivered)
 
 UError = _reflection.GeneratedProtocolMessageType('UError', (_message.Message,), dict(
   DESCRIPTOR = _UERROR,
   __module__ = 'U2A_pb2'
-  # @@protoc_insertion_point(class_scope:UError)
+  # @@protoc_insertion_point(class_scope:edu.duke.ece568.miniups.UError)
   ))
 _sym_db.RegisterMessage(UError)
-
-UCommand = _reflection.GeneratedProtocolMessageType('UCommand', (_message.Message,), dict(
-  DESCRIPTOR = _UCOMMAND,
-  __module__ = 'U2A_pb2'
-  # @@protoc_insertion_point(class_scope:UCommand)
-  ))
-_sym_db.RegisterMessage(UCommand)
 
 APickupReq = _reflection.GeneratedProtocolMessageType('APickupReq', (_message.Message,), dict(
   DESCRIPTOR = _APICKUPREQ,
   __module__ = 'U2A_pb2'
-  # @@protoc_insertion_point(class_scope:APickupReq)
+  # @@protoc_insertion_point(class_scope:edu.duke.ece568.miniups.APickupReq)
   ))
 _sym_db.RegisterMessage(APickupReq)
 
 AItem = _reflection.GeneratedProtocolMessageType('AItem', (_message.Message,), dict(
   DESCRIPTOR = _AITEM,
   __module__ = 'U2A_pb2'
-  # @@protoc_insertion_point(class_scope:AItem)
+  # @@protoc_insertion_point(class_scope:edu.duke.ece568.miniups.AItem)
   ))
 _sym_db.RegisterMessage(AItem)
 
 ALoad = _reflection.GeneratedProtocolMessageType('ALoad', (_message.Message,), dict(
   DESCRIPTOR = _ALOAD,
   __module__ = 'U2A_pb2'
-  # @@protoc_insertion_point(class_scope:ALoad)
+  # @@protoc_insertion_point(class_scope:edu.duke.ece568.miniups.ALoad)
   ))
 _sym_db.RegisterMessage(ALoad)
+
+ACreatePackage = _reflection.GeneratedProtocolMessageType('ACreatePackage', (_message.Message,), dict(
+  DESCRIPTOR = _ACREATEPACKAGE,
+  __module__ = 'U2A_pb2'
+  # @@protoc_insertion_point(class_scope:edu.duke.ece568.miniups.ACreatePackage)
+  ))
+_sym_db.RegisterMessage(ACreatePackage)
 
 ALoadComplete = _reflection.GeneratedProtocolMessageType('ALoadComplete', (_message.Message,), dict(
   DESCRIPTOR = _ALOADCOMPLETE,
   __module__ = 'U2A_pb2'
-  # @@protoc_insertion_point(class_scope:ALoadComplete)
+  # @@protoc_insertion_point(class_scope:edu.duke.ece568.miniups.ALoadComplete)
   ))
 _sym_db.RegisterMessage(ALoadComplete)
 
 AError = _reflection.GeneratedProtocolMessageType('AError', (_message.Message,), dict(
   DESCRIPTOR = _AERROR,
   __module__ = 'U2A_pb2'
-  # @@protoc_insertion_point(class_scope:AError)
+  # @@protoc_insertion_point(class_scope:edu.duke.ece568.miniups.AError)
   ))
 _sym_db.RegisterMessage(AError)
 
 ACommand = _reflection.GeneratedProtocolMessageType('ACommand', (_message.Message,), dict(
   DESCRIPTOR = _ACOMMAND,
   __module__ = 'U2A_pb2'
-  # @@protoc_insertion_point(class_scope:ACommand)
+  # @@protoc_insertion_point(class_scope:edu.duke.ece568.miniups.ACommand)
   ))
 _sym_db.RegisterMessage(ACommand)
+
+UCommand = _reflection.GeneratedProtocolMessageType('UCommand', (_message.Message,), dict(
+  DESCRIPTOR = _UCOMMAND,
+  __module__ = 'U2A_pb2'
+  # @@protoc_insertion_point(class_scope:edu.duke.ece568.miniups.UCommand)
+  ))
+_sym_db.RegisterMessage(UCommand)
 
 
 # @@protoc_insertion_point(module_scope)
