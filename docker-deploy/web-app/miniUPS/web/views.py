@@ -102,37 +102,12 @@ enter email version
 another: get packlist directly after logged-in
 """
 def packlist(request):
-    if request.method == 'POST':
-        form = Packlistform(request.POST)
-        user_email = request.POST.get('email') 
-        packages = Package.objects.filter(email=user_email) 
-        if packages:
-            package_list = [{'id': package.id, 'status': package.status} for package in packages]
-            context = {'package_list': package_list}
-            return render(request, 'package_list.html', context)
-        else:
-            return render(request, 'form.html', {'form': form,'error':"email doesn't exist"})
-    else:
-        form = Packlistform()
-        return render(request, 'form.html', {'form': form})
+    pass
 
-def detail(request, package_id):
+def detail(request):
+    package_id = request.package_id
     package = Package.objects.filter(package_id=package_id) 
     context = {'package': package}
     return render(request, 'package_detail.html', context)
-
-def getLoc(request):
-    if request.method == 'POST':
-        form = getLocform(request.POST)
-        user_id = request.POST.get('user_id') 
-        addresses = Address.objects.filter(owner_id=user_id) 
-        if addresses:
-            context = {'addresses': addresses}
-            return render(request, 'package_list.html', context)
-        else:
-            return render(request, 'form.html', {'form': form,'error':"user id doesn't exist"})
-    else:
-        form = getLocform()
-        return render(request, 'form.html', {'form': form})
 
 

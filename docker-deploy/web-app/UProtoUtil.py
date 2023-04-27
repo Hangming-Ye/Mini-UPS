@@ -10,6 +10,8 @@ import server
 import smtplib
 from email.mime.text import MIMEText
 
+wSeqNumSet = set()
+
 '''
 @Desc   :Connect to the world and initialize trucks
 @Arg    :world_socket, Truck Number
@@ -242,7 +244,7 @@ def sendAckBack(worldResp, fdW):
 
     for err in worldResp.error:
         ackList.append(err.seqnum)
-    
+
     for ack in worldResp.acks:
         handleAck(ack)
 
@@ -260,7 +262,7 @@ def handlewResp(session, msg, fdW):
     print("!!!!! WORLD RESP", worldResp)
     for completion in worldResp.completions:
         handleUFinished(session, completion)
-        
+            
     for delivery in worldResp.delivered:
         handleUDeliveryMade(session, delivery)
 
@@ -268,7 +270,9 @@ def handlewResp(session, msg, fdW):
         handleTruck(truck)
 
     for err in worldResp.error:
-        print(err)
+        if err.seqnum not in wSeqNumSet:
+            wSeqNumSet.add(err.seqnum)
+            print(err)
 
     if worldResp.HasField("finished") and worldResp.finished:  # close connection
         print("disconnect successfully")
@@ -279,19 +283,21 @@ def handlewResp(session, msg, fdW):
 @Return : 
 '''
 def handleUFinished(session, completion):
-    truck = session.query(Truck).filter_by(truck_id = completion.truckid).first()
-    if completion.status == "ARRIVE WAREHOUSE":
-        truck.status = TruckStatusEnum.arriveWH
-        session.commit()
-        print(1)
-        print("Truck ID: ", completion.truckid)
-        print(truck.whid)
-        AProtoUtil.send_UArrived(completion.truckid, truck.whid)
-        print(2)
-    else:
-        truck.status = TruckStatusEnum.idle
-        session.commit()
-    print(3)
+    if completion.seqnum not in wSeqNumSet:
+        wSeqNumSet.add(completion.seqnum)
+        truck = session.query(Truck).filter_by(truck_id = completion.truckid).first()
+        if completion.status == "ARRIVE WAREHOUSE":
+            truck.status = TruckStatusEnum.arriveWH
+            session.commit()
+            print(1)
+            print("Truck ID: ", completion.truckid)
+            print(truck.whid)
+            AProtoUtil.send_UArrived(completion.truckid, truck.whid)
+            print(2)
+        else:
+            truck.status = TruckStatusEnum.idle
+            session.commit()
+        
 
 '''
 @Desc   : handle the UDeliveryMade response from world, change package status, forward to amazon
@@ -299,11 +305,13 @@ def handleUFinished(session, completion):
 @Return :
 '''
 def handleUDeliveryMade(session, delivery):
-    package = session.query(Package).filter_by(package_id = delivery.packageid).first()
-    package.status = PackageStatusEnum.complete
-    session.commit()
-    AProtoUtil.send_UDelivered(package.package_id)
-    send_email(session, delivery.packageid)
+    if delivery.seqnum not in wSeqNumSet:
+        wSeqNumSet.add(delivery.seqnum)
+        package = session.query(Package).filter_by(package_id = delivery.packageid).first()
+        package.status = PackageStatusEnum.complete
+        session.commit()
+        AProtoUtil.send_UDelivered(package.package_id)
+        send_email(session, delivery.packageid)
     
 
 '''
@@ -321,7 +329,9 @@ def handleAck(ack):
 @Return :
 '''
 def handleTruck(truck):
-    print(truck)
+    if truck.seqnum not in wSeqNumSet:
+        wSeqNumSet.add(truck.seqnum)
+        print(truck)
 
 def get_seqnum() -> int:
     server.seqLock.acquire()
@@ -332,9 +342,9 @@ def get_seqnum() -> int:
 
 def send_email(session, packageid):
     package = session.query(Package).filter_by(package_id = packageid).first()
-    smtp_server = 'smtp.gmail.com'
+    smtp_server = 'smtp.outlook.com'
     smtp_port = 587
-    from_email = 'sender@gmail.com'
+    from_email = 'sender@outlook.com'
     passw = '123'
     to_email = str(package.email)
     
