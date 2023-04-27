@@ -18,8 +18,8 @@ WORLD_PORT = 12345
 AMZ_PORT = 11111
 UPS_PORT = 22222
 CLIENT_PORT = 33333
-AMZ_ADDR = "vcm-32434.vm.duke.edu"
-TruckNum = 100
+AMZ_ADDR = "vcm-30971.vm.duke.edu"
+TruckNum = 1
 threadPool = ThreadPoolExecutor(40)
 seq = 0
 ack_set = set()
@@ -27,6 +27,7 @@ seqLock = threading.Lock()
 fdWLock = threading.Lock()
 ackLock = threading.Lock()
 waitlist = Queue()
+waitLock = threading.Lock()
 
 def worldProcess(world_ip, world_port):
     while True:
@@ -82,11 +83,6 @@ def server():
     amazon = threading.Thread(target=AmazonProcess, args=(AMZ_ADDR, UPS_PORT, ))
     world.start()
     amazon.start()
-
-    time.sleep(10)
-    fd = connectToServer(AMZ_ADDR, AMZ_PORT)
-    fd.close()
-    print("*****************", ack_set)
 
     world.join()
     amazon.join()

@@ -12,6 +12,7 @@ from email.mime.text import MIMEText
 
 wSeqNumSet = set()
 
+
 '''
 @Desc   :Connect to the world and initialize trucks
 @Arg    :world_socket, Truck Number
@@ -92,12 +93,12 @@ def send_UGoPickup(session, world_socket, whid):
     pickup.seqnum = get_seqnum()
 
     #fetch the first truckid with status = idle
+    server.waitLock.acquire()
     truck = session.query(Truck).filter_by(status=TruckStatusEnum.idle).first()
-    if not truck:
+    if truck is None:
         truck = session.query(Truck).filter_by(status=TruckStatusEnum.delivering).first()
-        if not truck:
+        if truck is None:
             server.waitlist.put(whid)
-            print("!!!! wait list", server.waitlist)
             return -1
         else:
             truck.status = TruckStatusEnum.driveWH
@@ -108,9 +109,9 @@ def send_UGoPickup(session, world_socket, whid):
         truck.status = TruckStatusEnum.driveWH
         truck.whid = whid
         session.commit()
-        print("$$$$$$", truck.dto())
     truckid = truck.truck_id
     pickup.truckid = truckid
+    server.waitLock.release()
 
     while(True):
         #send UCommand to the world
@@ -177,7 +178,8 @@ def send_UGoDeliver(session, world_socket, truckid):
 
     if not server.waitlist.empty():
         whid = server.waitlist.get()
-        print("process wait list", whid)
+        print("$$$$$$$$$$$$$$$$$$$$$$$$ remove whid:", whid, "from waitlist")
+        print("current wait list, ",server.waitlist.queue)
         send_UGoPickup(session, world_socket, whid)
 
 '''
@@ -311,7 +313,7 @@ def handleUDeliveryMade(session, delivery):
         package.status = PackageStatusEnum.complete
         session.commit()
         AProtoUtil.send_UDelivered(package.package_id)
-        send_email(session, delivery.packageid)
+        #send_email(session, delivery.packageid)
     
 
 '''
@@ -353,7 +355,7 @@ def send_email(session, packageid):
 
     message = MIMEText(context, 'plain','utf-8')
     message['Subject'] = 'UPS Delivered Confirmation' 
-    message['From'] = from_email    
+    message['From'] = from_email
     message['To'] = to_email  
 
     try:

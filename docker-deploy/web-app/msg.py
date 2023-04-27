@@ -52,7 +52,8 @@ def connectToServer(ip, port):
         try:
             fd.connect((ip, port))
             print("Connection established to ", ip, "port", port)
-        except:
+        except Exception as e:
+            print(e)
             print("Connection failed to ", ip, "port", port)
             exit(0)
         return fd
