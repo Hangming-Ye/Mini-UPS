@@ -4,13 +4,13 @@
 from .models import *
 def getPackagesByUser(email):
     packages = Package.objects.filter(email=email)
-    package_list = [{'id': package.package_id, 'status': package.status, 'truck_id':package.truck_id} for package in packages]
+    package_list = [package.dto() for package in packages]
     context = {'package_list': package_list}
     return context
 
 def getLoc(user_id):
     locs = Address.objects.filter(owner_id = user_id)
-    addr_list = [{'location_x': loc.location_x, 'location_y':loc.location_y, 'name':loc.name} for loc in locs]
+    addr_list = [loc.dto() for loc in locs]
     context = {'addr_list': addr_list}
     return context
  

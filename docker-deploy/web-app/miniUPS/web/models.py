@@ -44,12 +44,12 @@ class Package(models.Model):
        managed = False
        db_table = "package"
 
-    STATUS_CHOICE = (("loaded", "loaded"), ("delivering", "delivering"), ("complete", "complete"))
+    STATUS_CHOICE = (("created", "created"), ("loaded", "loaded"), ("delivering", "delivering"), ("complete", "complete"))
     package_id = models.IntegerField(primary_key=True)
     status = models.CharField(choices=STATUS_CHOICE, max_length = 128)
     location_x = models.IntegerField()
     location_y = models.IntegerField()
-    truck_id = models.IntegerField()
+    truck_id = models.IntegerField(null=True, default=None)
     email = models.CharField(max_length=256)
     item_id = models.IntegerField()
     item_num = models.IntegerField()
