@@ -344,10 +344,10 @@ def get_seqnum() -> int:
 
 def send_email(session, packageid):
     package = session.query(Package).filter_by(package_id = packageid).first()
-    smtp_server = 'smtp.outlook.com'
+    smtp_server = 'smtp.office365.com'
     smtp_port = 587
-    from_email = 'sender@outlook.com'
-    passw = '123'
+    from_email = 'Duke_ECE568_RSS@outlook.com'
+    passw = '568zuoyezhenduo'
     to_email = str(package.email)
     
     context = "Dear constomer:\n\nYour package " + str(packageid) + " has arrived, please check it!\n"\

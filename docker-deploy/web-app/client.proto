@@ -1,0 +1,35 @@
+syntax = "proto2";
+
+//UPS arrived notification
+message CQuery{
+	required int32 packageid = 1;
+}
+
+//UPS package delivered
+message SMade{
+    required int32 packageid = 1;
+    required int32 location_x = 2;
+    required int32 location_y = 3;
+}
+
+message CChangeLoc{
+    required int32 packageid = 1;
+    required int32 location_x = 2;
+    required int32 location_y = 3;
+}
+
+message SChanged{
+    required int32 packageid = 1;
+}
+
+//Amazon command packet
+message CCommand {
+	repeated CQuery query = 1;
+	repeated CChangeLoc newLoc = 2;
+}
+
+//UPS command packet
+message SCommand {
+	repeated SMade info = 1;
+	repeated SChanged changed = 2;
+}
