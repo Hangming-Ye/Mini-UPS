@@ -4,6 +4,7 @@ from db import *
 from orm import *
 import time
 import AProtoUtil
+import CProtoUtil
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
 import server
@@ -181,6 +182,37 @@ def send_UGoDeliver(session, world_socket, truckid):
         print("current wait list, ",server.waitlist.queue)
         send_UGoPickup(session, world_socket, whid)
 
+def send_UGoDeliver_one(session, world_socket, packageid):
+    ucommands = world_ups_pb2.UCommands()
+    ucommands.disconnect = False
+    delivery = ucommands.deliveries.add()
+    package = session.query(Package).filter_by(package_id=packageid).one()
+    truckid = package.truck_id
+    print(truckid)
+    delivery.truckid = truckid
+    delivery.seqnum = get_seqnum()
+    print(package.dto())
+    delivery_location = delivery.packages.add()
+    delivery_location.packageid = packageid
+    delivery_location.x = package.location_x
+    delivery_location.y = package.location_y
+
+    print("Finished writing UGoDelivery of Ucommand")
+
+    while(True):
+        #send UCammand to world
+        server.fdWLock.acquire()
+        send_msg(world_socket, ucommands)
+        server.fdWLock.release()
+        print("Sent UCommand go delivery")
+        #handling message lost
+        time.sleep(1)
+        if delivery.seqnum in server.ack_set:
+            print("Sent UCommand go delivery, already recceived by world")
+            break
+        print("Sent UCommand go delivery, not recceived by world " + str(delivery.seqnum))
+
+
 '''
 @Desc   :Check where the truck is
 @Arg    :world_socket, truckid, seq
@@ -268,7 +300,8 @@ def handlewResp(session, msg, fdW):
         handleUDeliveryMade(session, delivery)
 
     for truck in worldResp.truckstatus:
-        handleTruck(truck)
+        truck_new = handleTruck(truck)
+        CProtoUtil.send_SMade(truck_new)
 
     for err in worldResp.error:
         if err.seqnum not in wSeqNumSet:
@@ -333,6 +366,7 @@ def handleTruck(truck):
     if truck.seqnum not in wSeqNumSet:
         wSeqNumSet.add(truck.seqnum)
         print(truck)
+        return truck
 
 def get_seqnum() -> int:
     server.seqLock.acquire()
