@@ -1,9 +1,9 @@
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
-from tmp_wyj import *
+ 
 import world_ups_pb2 as W2P
 import U2A_pb2 as U2A
-from tmp_wyj import *
+ 
 from db import *
 from orm import *
 from UProtoUtil import *

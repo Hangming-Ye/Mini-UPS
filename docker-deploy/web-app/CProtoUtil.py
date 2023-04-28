@@ -12,37 +12,38 @@ def parseCReq(msg):
     clientReq.ParseFromString(msg)
     return clientReq
 
-def handlecReq(session, msg, world_socket, client_socket):
+def handlecReq(session, msg, world_socket):
     clientReq = parseCReq(msg)
     print("!!!!! Client REQ", clientReq)
     for query in clientReq.query:
         handlequery(session, world_socket, query)
             
     for newLoc in clientReq.newLoc:
-        handlechangeloc(session, world_socket, client_socket, newLoc)
+        handlechangeloc(session, world_socket, newLoc)
 
 def handlequery(session, world_socket, query):
     package = session.query(Package).filter_by(package_id=query.packageid).one()
     truckid = package.truck_id
     UProtoUtil.send_UQuery(world_socket, truckid)
 
-def handlechangeloc(session, world_socket, client_socket, newLoc):
-    send_SChanged(client_socket,newLoc.packageid)
+def handlechangeloc(session, world_socket, newLoc):
+    send_SChanged(newLoc.packageid)
     package = session.query(Package).filter_by(package_id=newLoc.packageid).one()
     package.location_x = newLoc.location_x
     package.location_y = newLoc.location_y
     session.commit()
-    UProtoUtil.send_UGoDeliver_one(session, world_socket, newLoc.packageid)
+    if package.truck_id != None:
+        UProtoUtil.send_UGoDeliver_one(session, world_socket, newLoc.packageid)
  
-def send_SMade(client_socket, truck):
+def send_SMade(truck):
     scommand = client_pb2.SCommand()
     info = scommand.info.add()
     info.location_x = truck.x
     info.location_y = truck.y
-    send_msg(client_socket, scommand)
+    send_msg(server.client_socket, scommand)
 
-def send_SChanged(client_socket,packageid):
+def send_SChanged(packageid):
     scommand = client_pb2.SCommand()
     changed = scommand.changed.add()
     changed.packageid = packageid
-    send_msg(client_socket, scommand)
+    send_msg(server.client_socket, scommand)
