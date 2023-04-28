@@ -141,7 +141,7 @@ def send_UGoDeliver(world_socket, truckid, seq):
     engine = connectDB()
     session = getSession(engine)
     # Find all the packages which status are 'loaded' and truck_id is truckid, change status to 'delivering'
-    packages = session.query(Package).filter_by(status=1, truck_id=truckid)
+    packages = session.query(Package).filter_by(status=PackageStatusEnum.loaded, truck_id=truckid)
     for package in packages.all():
         package.status = 2
     session.commit()

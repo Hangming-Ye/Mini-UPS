@@ -12,7 +12,6 @@ from email.mime.text import MIMEText
 
 wSeqNumSet = set()
 
-
 '''
 @Desc   :Connect to the world and initialize trucks
 @Arg    :world_socket, Truck Number
@@ -87,7 +86,7 @@ def reconnect_to_world(world_socket, world_id):
 def send_UGoPickup(session, world_socket, whid):
     ucommands = world_ups_pb2.UCommands()
     ucommands.disconnect = False
-    ucommands.simspeed = 400
+    ucommands.simspeed = 100
     pickup = ucommands.pickups.add()
     pickup.whid = whid
     pickup.seqnum = get_seqnum()
@@ -339,6 +338,7 @@ def get_seqnum() -> int:
     server.seqLock.acquire()
     ans = server.seq
     server.seq += 1
+    print("@@@@@@@@@@@@@@@@@", server.seq)
     server.seqLock.release()
     return ans
 
@@ -366,4 +366,4 @@ def send_email(session, packageid):
         email_server.quit() 
         print('success')
     except smtplib.SMTPException as e:
-        print('error:',e) 
+        print('error:',e)

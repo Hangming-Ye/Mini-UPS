@@ -2,10 +2,10 @@
 #2. 建个地址表（地址id, location_x,y, 地址名字，owner_id(外键)）
 #3. 给一个user_id，拿到所有的地址
 from .models import *
-def getPackagesByUser(email):
-    packages = Package.objects.filter(email=email)
+def getPackagesByUser(uid):
+    packages = Package.objects.filter(pk=uid)
     package_list = [package.dto() for package in packages]
-    context = {'package_list': package_list}
+    context = {'packageList': package_list}
     return context
 
 def getLoc(user_id):

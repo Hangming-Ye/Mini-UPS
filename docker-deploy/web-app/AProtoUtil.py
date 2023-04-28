@@ -1,9 +1,7 @@
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
-from tmp_wyj import *
 import world_ups_pb2 as W2P
 import U2A_pb2 as U2A
-from tmp_wyj import *
 from db import *
 from orm import *
 from UProtoUtil import *
@@ -62,6 +60,7 @@ def handleALoad(session, load):
     print("load start")
     pack = session.query(Package).filter_by(package_id = load.packageid).one()
     pack.truck_id = load.truckid
+    pack.status = PackageStatusEnum.loaded
     print("loaded")
     session.commit()
 
@@ -72,7 +71,14 @@ def handleALoad(session, load):
 @Return :
 '''
 def handleALoadComplete(session, loadComplete, fdW):
-    send_UGoDeliver(session, fdW, loadComplete.truckid)
+    pack = session.query(Package).filter_by(truck_id = loadComplete.truckid, status = PackageStatusEnum.loaded).all()
+    if not pack:
+        truck = session.query(Truck).filter_by(truck_id = loadComplete.truckid).one()
+        truck.status = TruckStatusEnum.idle
+        session.commit()
+        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& change to idle due to no package")
+    else:
+        send_UGoDeliver(session, fdW, loadComplete.truckid)
 
 def handleACreatePackage(session, createpck):
     print("Create Package begin\n")
