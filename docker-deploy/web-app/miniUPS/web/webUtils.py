@@ -17,10 +17,10 @@ def getLoc(user_id):
     return context
 
 def sendLoc(package_id: int, x: int, y: int):
-    pass
+    server_fd = connectToServer('0.0.0.0', 33333)
 
 def sendQuery(package_id: int):
-    pass
+    server_fd = connectToServer('0.0.0.0', 33333)
 
 '''
 @Desc   : send the proto msg to destination socket

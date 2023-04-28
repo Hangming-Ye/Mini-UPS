@@ -22,6 +22,7 @@ fdWLock = threading.Lock()
 ackLock = threading.Lock()
 waitlist = Queue()
 waitLock = threading.Lock()
+client_socket = socket()
 
 def worldProcess(world_ip, world_port):
     while True:
@@ -58,10 +59,10 @@ def clientProcess(client_ip, client_port):
     print("----Start Listen from Front-end at Port", client_port,"----")
 
     while True:
-        fdA, addr = sock.accept()
-        msg = recv_msg(fdA)
+        fdC, addr = sock.accept()
+        msg = recv_msg(fdC)
         if msg is None:
-            fdA.close()
+            fdC.close()
         else:
             pass
 
@@ -75,11 +76,15 @@ def server():
 
     world = threading.Thread(target=worldProcess, args=('0.0.0.0', WORLD_PORT,))
     amazon = threading.Thread(target=AmazonProcess, args=(AMZ_ADDR, UPS_PORT, ))
+    client = threading.Thread(target=clientProcess, args=('0.0.0.0', CLIENT_PORT, ))
+
     world.start()
     amazon.start()
+    client.start()
 
     world.join()
     amazon.join()
+    client.join()
     fdW.close()
 
 
