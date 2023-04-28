@@ -9,7 +9,8 @@ from .webForm import *
 from .webUtils import *
 from django.contrib.auth.models import User
 appname='web'
-
+# 添加query的状态， 如果delivering需要访问后端
+# changeLoc, 如果delivering需要访问后端
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
@@ -24,7 +25,7 @@ def query(request):
         package = Package.objects.filter(package_id = package_id)
         print("!!!!", package)
         if package:
-            return redirect('/index/', {'package': package[0]})
+            return redirect('/detail/', {'package': package[0]})
         else:
             return render(request, 'form.html', {'form': form,'error':"package doesn't exist"})
     else:
@@ -91,7 +92,7 @@ def changeProfile(request):
             return render(request, 'form.html', {'form': form,'error':"Passwords don't match!"})
     else:
         form = modifyProfile()
-        return render(request, 'form.html', {'form': form, 'user': user})
+        return render(request, 'form.html', {'form': form, 'user': request.user})
 
 
 def logout(request):
@@ -100,13 +101,6 @@ def logout(request):
     return redirect('/login/')
 
 def changeLoc(request, package_id):
-    pass
-
-"""
-enter email version
-another: get packlist directly after logged-in
-"""
-def packlist(request):
     pass
 
 def detail(request):

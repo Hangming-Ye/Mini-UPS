@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, Double, Sequence, REAL, Enum, BIGINT
+from sqlalchemy import Column, String, Integer, Enum
 import enum
 from sqlalchemy.orm import declarative_base
 

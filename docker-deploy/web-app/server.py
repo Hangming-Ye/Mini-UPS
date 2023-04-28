@@ -1,9 +1,4 @@
-from google.protobuf.internal.decoder import _DecodeVarint32
-from google.protobuf.internal.encoder import _EncodeVarint
-import world_ups_pb2 as W2P
-import U2A_pb2 as U2A
 import threading
-import multiprocessing as MP
 from sqlalchemy.orm import scoped_session, sessionmaker
 from concurrent.futures import ThreadPoolExecutor
 from db import *
@@ -12,7 +7,6 @@ from AProtoUtil import *
 from UProtoUtil import *
 from queue import Queue
 import threading
-import time
 
 WORLD_PORT = 12345
 AMZ_PORT = 11111

@@ -1,12 +1,10 @@
-import world_ups_pb2, U2A_pb2
+import world_ups_pb2
 from msg import *
 from db import *
 from orm import *
 import time
 import AProtoUtil
 import CProtoUtil
-from google.protobuf.internal.decoder import _DecodeVarint32
-from google.protobuf.internal.encoder import _EncodeVarint
 import server
 import smtplib
 from email.mime.text import MIMEText
