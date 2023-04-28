@@ -32,7 +32,7 @@ def handlechangeloc(session, world_socket, newLoc):
     package.location_x = newLoc.location_x
     package.location_y = newLoc.location_y
     session.commit()
-    if package.truck_id != None:
+    if package.status == PackageStatusEnum.delivering:
         UProtoUtil.send_UGoDeliver_one(session, world_socket, newLoc.packageid)
  
 def send_SMade(truck):
