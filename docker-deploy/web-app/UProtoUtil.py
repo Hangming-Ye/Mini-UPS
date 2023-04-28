@@ -4,6 +4,7 @@ from db import *
 from orm import *
 import time
 import AProtoUtil
+import CProtoUtil
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
 import server
@@ -334,6 +335,7 @@ def handleTruck(truck):
     if truck.seqnum not in wSeqNumSet:
         wSeqNumSet.add(truck.seqnum)
         print(truck)
+        CprotoUtil.send_SMade(session, client_socket, truck)
 
 def get_seqnum() -> int:
     server.seqLock.acquire()

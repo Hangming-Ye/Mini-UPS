@@ -41,7 +41,7 @@ def worldProcess(world_ip, world_port):
             """
         else:
             # print("######", msg)
-            threadPool.submit(handlewResp, session_factory(), msg, fdW)
+            threadPool.submit(handlewResp, session_factory(), msg, fdW, fdC)
 
 def AmazonProcess(amazon_addr, ups_port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

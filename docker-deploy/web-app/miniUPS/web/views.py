@@ -97,10 +97,6 @@ def logout(request):
 def changeLoc(request, package_id):
     pass
 
-"""
-enter email version
-another: get packlist directly after logged-in
-"""
 def packlist(request):
     pass
 

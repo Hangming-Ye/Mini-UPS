@@ -1,5 +1,5 @@
 syntax = "proto2";
-package edu.duke.ece568.miniups;
+
 //UPS arrived notification
 message UArrived{
 	required int32 truckid = 1;
