@@ -29,13 +29,7 @@ def worldProcess(world_ip, world_port):
         msg = recv_msg(fdW)
         if msg is None:
             break
-            """
-            print("Empty message")
-            connect_to_world_again(fdW, worldid)
-            return
-            """
         else:
-            # print("######", msg)
             threadPool.submit(handlewResp, session_factory(), msg, fdW)
 
 def AmazonProcess(amazon_addr, ups_port):
