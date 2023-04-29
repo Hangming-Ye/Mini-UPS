@@ -54,3 +54,18 @@ class queryForm(ModelForm):
         help_texts = {
             'package_id': 'which is also the package id',
         }
+
+class addLocationForm(ModelForm):
+    class Meta:
+        model = Address
+        fields = ['name','location_x', 'location_y']
+
+class changeLocationForm(ModelForm):
+    class Meta:
+        model = Package
+        fields = ['location_x', 'location_y']
+
+class satisfactionForm(ModelForm):
+    class Meta:
+        model = Satisfaction
+        fields = ['rate','suggestion']

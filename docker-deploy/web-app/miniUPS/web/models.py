@@ -6,7 +6,6 @@ class myUser(User):
         return str(self.id)
     
 class Address(models.Model):
-    id = models.IntegerField(primary_key=True)
     location_x = models.IntegerField()
     location_y = models.IntegerField()
     name = models.CharField(max_length=255)
@@ -68,3 +67,11 @@ class Package(models.Model):
         ans['item_name'] = self.item_name
         ans['item_desc'] = self.item_desc
         return ans
+
+class Satisfaction(models.Model):
+    RATE_CHOICE = ((1,1),(2,2),(3,3),(4,4),(5,5))
+    pack_id = models.IntegerField()
+    rate = models.IntegerField(choices=RATE_CHOICE)
+    suggestion = models.CharField(max_length=1024)
+    
+    

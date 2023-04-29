@@ -1,6 +1,22 @@
 import socket
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
+'''
+@Desc   : connect to a server by specify ip and port
+@Arg    : ip: address, port: port
+@Return : socket
+'''
+def connectToServer(ip, port):
+        fd = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        fd.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            fd.connect((ip, port))
+            print("Connection established to ", ip, "port", port)
+        except Exception as e:
+            print(e)
+            print("Connection failed to ", ip, "port", port)
+            exit(0)
+        return fd
 
 '''
 @Desc   : send the proto msg to destination socket
@@ -30,27 +46,13 @@ def recv_msg(socket):
         except:
             whole_message = None
             return whole_message
+    print("!message len", msg_len)
     whole_message = socket.recv(msg_len)
     msg = bytearray(whole_message)
+    print(type(whole_message))
     while len(msg) != msg_len:
+        print("fuck socket")
         tmp = socket.recv(msg_len-len(msg))
         msg.extend(bytearray(tmp))
     whole_message = bytes(msg)
     return whole_message
-
-'''
-@Desc   : connect to a server by specify ip and port
-@Arg    : ip: address, port: port
-@Return : socket
-'''
-def connectToServer(ip, port):
-        fd = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        fd.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        try:
-            fd.connect((ip, port))
-            print("Connection established to ", ip, "port", port)
-        except Exception as e:
-            print(e)
-            print("Connection failed to ", ip, "port", port)
-            exit(0)
-        return fd

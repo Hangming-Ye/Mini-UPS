@@ -3,8 +3,10 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from concurrent.futures import ThreadPoolExecutor
 from db import *
 from orm import *
+import socket
 from AProtoUtil import *
 from UProtoUtil import *
+from CProtoUtil import *
 from queue import Queue
 import threading
 
@@ -22,7 +24,6 @@ fdWLock = threading.Lock()
 ackLock = threading.Lock()
 waitlist = Queue()
 waitLock = threading.Lock()
-client_socket = socket()
 
 def worldProcess(world_ip, world_port):
     while True:
@@ -58,7 +59,7 @@ def clientProcess(client_ip, client_port):
         if msg is None:
             fdC.close()
         else:
-            pass
+            threadPool.submit(handlecReq, session_factory(), msg, fdW, fdC)
 
 def server():
     global session_factory, fdW
@@ -70,12 +71,17 @@ def server():
 
     world = threading.Thread(target=worldProcess, args=('0.0.0.0', WORLD_PORT,))
     amazon = threading.Thread(target=AmazonProcess, args=(AMZ_ADDR, UPS_PORT, ))
-    client = threading.Thread(target=clientProcess, args=('0.0.0.0', CLIENT_PORT, ))
+    client = threading.Thread(target=clientProcess, args=('0.0.0.0', CLIENT_PORT, fdW))
 
     world.start()
     amazon.start()
     client.start()
 
+    pack = Package(package_id = 10, status = PackageStatusEnum.created, location_x = 2, 
+                location_y = 2, email = "hy201@duke.edu", 
+                item_id = 1, item_num = 2, item_name = "milk", item_desc = "healthy, reduced fat")
+    session_factory().add(pack)
+    session_factory().commit()
     world.join()
     amazon.join()
     client.join()

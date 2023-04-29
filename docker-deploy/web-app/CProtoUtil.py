@@ -3,14 +3,13 @@ from msg import *
 from db import *
 from orm import *
 import UProtoUtil
-import server
 
 def parseCReq(msg):
     clientReq = client_pb2.CCommand()
     clientReq.ParseFromString(msg)
     return clientReq
 
-def handlecReq(session, msg, world_socket):
+def handlecReq(session, msg, world_socket, client_socket):
     clientReq = parseCReq(msg)
     print("!!!!! Client REQ", clientReq)
     for query in clientReq.query:
