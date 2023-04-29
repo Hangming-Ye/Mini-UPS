@@ -59,7 +59,7 @@ def clientProcess(client_ip, client_port):
         if msg is None:
             fdC.close()
         else:
-            threadPool.submit(handlecReq, session_factory(), msg, fdW, fdC)
+            threadPool.submit(handlecReq, session_factory(), msg, fdW)
 
 def server():
     global session_factory, fdW

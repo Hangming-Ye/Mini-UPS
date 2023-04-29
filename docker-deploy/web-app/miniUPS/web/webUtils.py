@@ -35,7 +35,20 @@ def sendQuery(package_id: int):
     return recvQuery(server_fd)
     
 def recvQuery(fd):
-    return "Currently deliverying at location (x,y)"
+    msg = recv_msg(fd)
+    serverRep = SCommand()
+    serverRep.ParseFromString(msg)
+    for info in serverRep.info:
+        location_x = info.location_x
+        location_y = info.location_y
+        addr_list = [location_x,location_y]
+        context = {'addr_list': addr_list}
+        return context
+     
 
 def recvLoc(fd):
-    return True
+    msg = recv_msg(fd)
+    if msg:
+        return True
+    else:
+        return False
