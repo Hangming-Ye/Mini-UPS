@@ -382,8 +382,8 @@ def send_email(session, packageid):
     passw = '568zuoyezhenduo'
     to_email = str(package.email)
     
-    context = "Dear constomer:\n\nYour package " + str(packageid) + " has arrived, please check it!\n"\
-                    + "If you have any question, please do not hesitate to contact us. Enjoy your day!\n\nUPS service center"
+    context = "Dear constomer:\n\nYour package " + str(packageid) + " has arrived, please check it through the detail link http://127.0.0.1:8000/detail/"+str(packageid)+"/!\n"\
+                    + "If you have any question, please do not hesitate to contact us and give us feedback through http://127.0.0.1:8000/form/"+str(packageid)+"/. Enjoy your day!\n\nUPS service center"
 
     message = MIMEText(context, 'plain','utf-8')
     message['Subject'] = 'UPS Delivered Confirmation' 

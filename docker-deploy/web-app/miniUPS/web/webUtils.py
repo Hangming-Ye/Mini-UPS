@@ -41,8 +41,7 @@ def recvQuery(fd):
     for info in serverRep.info:
         location_x = info.location_x
         location_y = info.location_y
-        addr_list = [location_x,location_y]
-        context = {'addr_list': addr_list}
+        context = "Currently delivering, location is " + str(location_x) +", "+str(location_y)
         return context
      
 

@@ -19,16 +19,32 @@
         <br>
         <a href="/query/">Track one Order</a>
         <br>
+        {% if package %}
+        <a href="/profile/">Back To Profile</a>
+        {% else %}
         <a href="/modifypwd/">Modify Password</a>
         <br>
         <a href="/addLocation/">Add Location</a>
         <br>
         <a href="/logout/">Log Out</a>
+        {% endif %}
       </div>
 
       <div id="content" style="background-color:#ffffff;height:100vw;width:80%;float:right;">
         <h1 class="text-center">Your Packages</h1>
-        {% if packageList %}
+        {% if package %}
+        <ul>
+        <li>
+          <b>Track ID:</b> {{package.package_id}} &nbsp; <b>Status:</b> {{package.status}} &nbsp; 
+          <b>Destination: </b>({{package.location_x}}, {{package.location_y}})
+          <br>
+          <b>Current Location:</b> {{package.curLoc}}
+          <br>
+          <a href="/detail/{{package.package_id}}/">Detail</a>
+        </li>
+        </ul>
+        {% else %}
+        {% if packageList%}
           <ul>
           {% for package in packageList %}
           <li>
@@ -41,6 +57,7 @@
           </ul>
         {% else %}
           <p>There's no package under your account.</p>
+        {% endif %}
         {% endif %}
       </div>
     </div>

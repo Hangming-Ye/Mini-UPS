@@ -47,7 +47,7 @@ def AmazonProcess(amazon_addr, ups_port):
         else:
             threadPool.submit(handleAMsg, session_factory(), msg, fdW)
 
-def clientProcess(client_ip, client_port):
+def clientProcess(client_ip, client_port, fdW):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind((client_ip, client_port))
     sock.listen(100)
@@ -80,7 +80,11 @@ def server():
     pack = Package(package_id = 10, status = PackageStatusEnum.created, location_x = 2, 
                 location_y = 2, email = "hy201@duke.edu", 
                 item_id = 1, item_num = 2, item_name = "milk", item_desc = "healthy, reduced fat")
+    pack2 = Package(package_id = 11, status = PackageStatusEnum.complete, location_x = 2, 
+                location_y = 2, email = "hy201@duke.edu", 
+                item_id = 1, item_num = 2, item_name = "apple", item_desc = "ugly and nanchide")
     session_factory().add(pack)
+    session_factory().add(pack2)
     session_factory().commit()
     world.join()
     amazon.join()

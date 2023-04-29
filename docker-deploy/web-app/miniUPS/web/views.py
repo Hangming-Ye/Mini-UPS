@@ -42,32 +42,31 @@ def query(request):
                 curLoc = "already sent to destination"
             content = package[0].dto()
             content['curLoc'] = curLoc
-            print(content)
             return render(request, path, {'package': content})
         else:
-            return render(request, 'form.html', {'form': form,'error':"package doesn't exist"})
+            return render(request, 'form.html', {'form': form,'error':"package doesn't exist", 'name':'Tracking a package'})
     else:
         form = queryForm()
-        return render(request, 'form.html', {'form': form})
+        return render(request, 'form.html', {'form': form, 'name':'Tracking a package'})
 
 def register(request):
     if request.method == 'POST':
         form = registerForm(request.POST)
         if form.is_valid():
             if form.cleaned_data['password'] != form.cleaned_data['retype_password']:
-                return render(request, 'form.html', {'form': form,'error':"Two password doesn't match"})
+                return render(request, 'form.html', {'form': form,'error':"Two password doesn't match", 'name':'Register'})
             if User.objects.filter(email = form.cleaned_data['email']):
-                return render(request, 'form.html', {'form': form,'error':"Email Address Already Exist"})
+                return render(request, 'form.html', {'form': form,'error':"Email Address Already Exist", 'name':'Register'})
             user = User()
             user = User.objects.create_user(username=form.cleaned_data['username'], email = form.cleaned_data['email'], 
                                             password = form.cleaned_data['password'])
             user.save()
             return redirect('/login/')
         else:
-            return render(request, 'form.html', {'form': form,'error':"user name already exist"})
+            return render(request, 'form.html', {'form': form,'error':"user name already exist", 'name':'Register'})
     else:
         form = registerForm()
-        return render(request, 'form.html', {'form': form})
+        return render(request, 'form.html', {'form': form, 'name':'Register'})
 
 def login(request):
     if request.method == 'POST':
@@ -79,13 +78,12 @@ def login(request):
                 auth.login(request, user)
                 return redirect("/profile/", {'user': user})
             else:
-                print("auth failed")
-                return render(request, 'form.html', {'form': form,'error':"password is incorrect"})
+                return render(request, 'form.html', {'form': form,'error':"password is incorrect", 'name':'Login'})
         else:
-            return render(request, 'form.html', {'form': form,'error':"user not exist"})
+            return render(request, 'form.html', {'form': form,'error':"user not exist", 'name':'Login'})
     else:
         form = loginForm()
-        return render(request, 'form.html', {'form': form})
+        return render(request, 'form.html', {'form': form, 'name':'Login'})
 
 @login_required()
 def profile(request):
@@ -107,18 +105,18 @@ def changeProfile(request):
             user.save()
             return redirect('/login/')
         else:
-            return render(request, 'form.html', {'form': form,'error':"Passwords don't match!"})
+            return render(request, 'form.html', {'form': form,'error':"Passwords don't match!", 'name': "Change Password"})
     else:
         form = modifyProfile()
-        return render(request, 'form.html', {'form': form, 'user': request.user})
+        return render(request, 'form.html', {'form': form, 'user': request.user, 'name': "Change Password"})
 
-
+@login_required
 def logout(request):
     if request.user.is_authenticated:
         auth.logout(request)
-    return redirect('/login/')
+    return redirect('/')
 
-login_required
+@login_required
 def changeLoc(request, package_id):
     if request.method == 'POST':
         form = changeLocationForm(request.POST)
@@ -132,12 +130,12 @@ def changeLoc(request, package_id):
                 package[0].location_x = location_x
                 package[0].location_y = location_y
                 package[0].save()
-            return redirect('/detail/', {'package': package[0].dto()})
+            return redirect('/detail/'+str(package_id), {'package': package[0].dto()})
         else:
-            return render(request, 'form.html', {'form': form,'error':"package doesn't exist"})
+            return render(request, 'form.html', {'form': form,'error':"package doesn't exist", 'name':'Change Desitination'})
     else:
         form = changeLocationForm(request.POST)
-        return render(request, 'form.html', {'form': form})
+        return render(request, 'form.html', {'form': form, 'name':'Change Desitination'})
     
 @login_required
 def detail(request, package_id):
@@ -155,13 +153,10 @@ def getSatisfaction(request, package_id):
         return HttpResponse("Thanks for completing the form, we value your experience and suggestions. Have a good day!")
     else:
         pack = Package.objects.filter(package_id = package_id)
-        if not pack or pack.status != "complete":
-            pass
-            # return HttpResponse("Invalid Link, package not exist or package not delivered")
+        if not pack or pack[0].status != "complete":
+            return HttpResponse("Invalid Link, package not exist or package not delivered")
         exist = Satisfaction.objects.filter(pack_id = package_id)
         if exist:
             return HttpResponse("You have already complete the form. Have a good day!")
         form = satisfactionForm()
-        return render(request, 'form.html', {'form': form})
-
-
+        return render(request, 'form.html', {'form': form, 'name':'Feedback'})
