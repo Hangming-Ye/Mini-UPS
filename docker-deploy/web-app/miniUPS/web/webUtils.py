@@ -18,9 +18,19 @@ def getLoc(user_id):
 
 def sendLoc(package_id: int, x: int, y: int):
     server_fd = connectToServer('0.0.0.0', 33333)
+    ccommand = client_pb2.CCommand()
+    newLoc = ccommand.newLoc.add()
+    newLoc.packageid = package_id
+    newLoc.location_x = x
+    newLoc.location_y = y
+    send_msg(server_fd, ccommand)
 
 def sendQuery(package_id: int):
     server_fd = connectToServer('0.0.0.0', 33333)
+    ccommand = client_pb2.CCommand()
+    query = ccommand.query.add()
+    query.packageid = package_id
+    send_msg(server_fd, ccommand)
 
 '''
 @Desc   : send the proto msg to destination socket
