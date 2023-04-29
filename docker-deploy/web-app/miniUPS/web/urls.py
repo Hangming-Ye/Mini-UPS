@@ -12,5 +12,5 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('detail/<int:package_id>/', views.detail, name='package-detail'),
     path('changeLocation/<int:package_id>/', views.changeLoc, name='package-changelocation'),
-    path('form/<int:package_id>', views.getSatisfaction, name='user form'),
+    path('form/<int:package_id>/', views.getSatisfaction, name='user form'),
 ]

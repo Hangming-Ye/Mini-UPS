@@ -1,17 +1,17 @@
 import socket
+
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
-
 '''
 @Desc   : send the proto msg to destination socket
 @Arg    : socketfd: destination, msg: proto object
 @Return : void
 '''
 def send_msg(socketfd, msg):
-    print("send", msg)
     string_msg = msg.SerializeToString()
     _EncodeVarint(socketfd.send, len(string_msg), None)
     socketfd.sendall(string_msg)
+
 
 '''
 @Desc   : receive msg from specific socket

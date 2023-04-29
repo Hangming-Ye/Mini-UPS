@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto2',
   serialized_options=None,
-  serialized_pb=_b('\n\x0c\x63lient.proto\"\x1b\n\x06\x43Query\x12\x11\n\tpackageid\x18\x01 \x02(\x05\"B\n\x05SMade\x12\x11\n\tpackageid\x18\x01 \x02(\x05\x12\x12\n\nlocation_x\x18\x02 \x02(\x05\x12\x12\n\nlocation_y\x18\x03 \x02(\x05\"G\n\nCChangeLoc\x12\x11\n\tpackageid\x18\x01 \x02(\x05\x12\x12\n\nlocation_x\x18\x02 \x02(\x05\x12\x12\n\nlocation_y\x18\x03 \x02(\x05\"\x1d\n\x08SChanged\x12\x11\n\tpackageid\x18\x01 \x02(\x05\"?\n\x08\x43\x43ommand\x12\x16\n\x05query\x18\x01 \x03(\x0b\x32\x07.CQuery\x12\x1b\n\x06newLoc\x18\x02 \x03(\x0b\x32\x0b.CChangeLoc\"<\n\x08SCommand\x12\x14\n\x04info\x18\x01 \x03(\x0b\x32\x06.SMade\x12\x1a\n\x07\x63hanged\x18\x02 \x03(\x0b\x32\t.SChanged')
+  serialized_pb=_b('\n\x0c\x63lient.proto\"\x1b\n\x06\x43Query\x12\x11\n\tpackageid\x18\x01 \x02(\x05\"/\n\x05SMade\x12\x12\n\nlocation_x\x18\x01 \x02(\x05\x12\x12\n\nlocation_y\x18\x02 \x02(\x05\"G\n\nCChangeLoc\x12\x11\n\tpackageid\x18\x01 \x02(\x05\x12\x12\n\nlocation_x\x18\x02 \x02(\x05\x12\x12\n\nlocation_y\x18\x03 \x02(\x05\"\x1d\n\x08SChanged\x12\x11\n\tpackageid\x18\x01 \x02(\x05\"?\n\x08\x43\x43ommand\x12\x16\n\x05query\x18\x01 \x03(\x0b\x32\x07.CQuery\x12\x1b\n\x06newLoc\x18\x02 \x03(\x0b\x32\x0b.CChangeLoc\"<\n\x08SCommand\x12\x14\n\x04info\x18\x01 \x03(\x0b\x32\x06.SMade\x12\x1a\n\x07\x63hanged\x18\x02 \x03(\x0b\x32\t.SChanged')
 )
 
 
@@ -64,22 +64,15 @@ _SMADE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='packageid', full_name='SMade.packageid', index=0,
+      name='location_x', full_name='SMade.location_x', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='location_x', full_name='SMade.location_x', index=1,
+      name='location_y', full_name='SMade.location_y', index=1,
       number=2, type=5, cpp_type=1, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='location_y', full_name='SMade.location_y', index=2,
-      number=3, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -97,7 +90,7 @@ _SMADE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=45,
-  serialized_end=111,
+  serialized_end=92,
 )
 
 
@@ -141,8 +134,8 @@ _CCHANGELOC = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=113,
-  serialized_end=184,
+  serialized_start=94,
+  serialized_end=165,
 )
 
 
@@ -172,8 +165,8 @@ _SCHANGED = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=186,
-  serialized_end=215,
+  serialized_start=167,
+  serialized_end=196,
 )
 
 
@@ -210,8 +203,8 @@ _CCOMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=217,
-  serialized_end=280,
+  serialized_start=198,
+  serialized_end=261,
 )
 
 
@@ -248,8 +241,8 @@ _SCOMMAND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=282,
-  serialized_end=342,
+  serialized_start=263,
+  serialized_end=323,
 )
 
 _CCOMMAND.fields_by_name['query'].message_type = _CQUERY

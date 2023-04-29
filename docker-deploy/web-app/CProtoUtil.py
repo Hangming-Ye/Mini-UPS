@@ -4,6 +4,7 @@ from db import *
 from orm import *
 import UProtoUtil
 import server
+import threading
 
 def parseCReq(msg):
     clientReq = client_pb2.CCommand()
@@ -12,20 +13,19 @@ def parseCReq(msg):
 
 def handlecReq(session, msg, world_socket):
     clientReq = parseCReq(msg)
-    print("!!!!! Client REQ", clientReq)
+    print("received client request", clientReq)
     for query in clientReq.query:
         handlequery(session, world_socket, query)
             
     for newLoc in clientReq.newLoc:
         handlechangeloc(session, world_socket, newLoc)
 
-def handlequery(session, world_socket, query):
+def handlequery(session, world_socket, query):    
     package = session.query(Package).filter_by(package_id=query.packageid).one()
     truckid = package.truck_id
     UProtoUtil.send_UQuery(world_socket, truckid)
 
 def handlechangeloc(session, world_socket, newLoc):
-    send_SChanged(newLoc.packageid)
     package = session.query(Package).filter_by(package_id=newLoc.packageid).one()
     package.location_x = newLoc.location_x
     package.location_y = newLoc.location_y

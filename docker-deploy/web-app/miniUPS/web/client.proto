@@ -1,0 +1,34 @@
+syntax = "proto2";
+
+ 
+message CQuery{
+	required int32 packageid = 1;
+}
+
+ 
+message SMade{
+    required int32 location_x = 1;
+    required int32 location_y = 2;
+}
+
+message CChangeLoc{
+    required int32 packageid = 1;
+    required int32 location_x = 2;
+    required int32 location_y = 3;
+}
+
+message SChanged{
+    required int32 packageid = 1;
+}
+
+ 
+message CCommand {
+	repeated CQuery query = 1;
+	repeated CChangeLoc newLoc = 2;
+}
+
+ 
+message SCommand {
+	repeated SMade info = 1;
+	repeated SChanged changed = 2;
+}

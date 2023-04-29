@@ -102,7 +102,6 @@ def send_UGoPickup(session, world_socket, whid):
             truck.status = TruckStatusEnum.driveWH
             truck.whid = whid
             session.commit()
-            print("&&&&&", truck.dto())
     else:
         truck.status = TruckStatusEnum.driveWH
         truck.whid = whid
@@ -116,10 +115,9 @@ def send_UGoPickup(session, world_socket, whid):
         server.fdWLock.acquire()
         send_msg(world_socket, ucommands)
         server.fdWLock.release()
-        print("Sent UCommand UGoPickup")
+        print("Sending UCommand UGoPickup", pickup)
         #handling message lost
         time.sleep(1)
-        print(server.ack_set)
         if pickup.seqnum in server.ack_set:
             print("Sent UCommand go pick up, already received by world")
             break
@@ -137,7 +135,6 @@ def send_UGoDeliver(session, world_socket, truckid):
     ucommands = world_ups_pb2.UCommands()
     ucommands.disconnect = False
     delivery = ucommands.deliveries.add()
-    print(truckid)
     delivery.truckid = truckid
     delivery.seqnum = get_seqnum()
     print("received go delivery")
@@ -145,7 +142,6 @@ def send_UGoDeliver(session, world_socket, truckid):
     packages = session.query(Package).filter_by(status=PackageStatusEnum.loaded, truck_id=truckid)
     
     for package in packages.all():
-        print(package.dto())
         delivery_location = delivery.packages.add()
         delivery_location.packageid = package.package_id
         delivery_location.x = package.location_x
@@ -158,7 +154,7 @@ def send_UGoDeliver(session, world_socket, truckid):
         server.fdWLock.acquire()
         send_msg(world_socket, ucommands)
         server.fdWLock.release()
-        print("Sent UCommand go delivery")
+        print("Sending UCommand go delivery", delivery)
         #handling message lost
         time.sleep(1)
         if delivery.seqnum in server.ack_set:
@@ -176,8 +172,6 @@ def send_UGoDeliver(session, world_socket, truckid):
 
     if not server.waitlist.empty():
         whid = server.waitlist.get()
-        print("$$$$$$$$$$$$$$$$$$$$$$$$ remove whid:", whid, "from waitlist")
-        print("current wait list, ",server.waitlist.queue)
         send_UGoPickup(session, world_socket, whid)
 
 def send_UGoDeliver_one(session, world_socket, packageid):
@@ -186,10 +180,8 @@ def send_UGoDeliver_one(session, world_socket, packageid):
     delivery = ucommands.deliveries.add()
     package = session.query(Package).filter_by(package_id=packageid).one()
     truckid = package.truck_id
-    print(truckid)
     delivery.truckid = truckid
     delivery.seqnum = get_seqnum()
-    print(package.dto())
     delivery_location = delivery.packages.add()
     delivery_location.packageid = packageid
     delivery_location.x = package.location_x
@@ -202,7 +194,7 @@ def send_UGoDeliver_one(session, world_socket, packageid):
         server.fdWLock.acquire()
         send_msg(world_socket, ucommands)
         server.fdWLock.release()
-        print("Sent UCommand go delivery")
+        print("Sending UCommand go delivery", delivery)
         #handling message lost
         time.sleep(1)
         if delivery.seqnum in server.ack_set:
@@ -226,7 +218,7 @@ def send_UQuery(world_socket, truckid):
         server.fdWLock.acquire()
         send_msg(world_socket, ucommands)
         server.fdWLock.release()
-        print("Sent UCommand UQuery")
+        print("Sending UCommand UQuery", query)
         time.sleep(1)
         if query.seqnum in server.ack_set:
             print("Sent UCommand query, already recceived by world")
@@ -290,7 +282,7 @@ def sendAckBack(worldResp, fdW):
 def handlewResp(session, msg, fdW):
     worldResp = parseWResp(msg)
     sendAckBack(worldResp, fdW)
-    print("!!!!! WORLD RESP", worldResp)
+    print("Received Response From World", worldResp)
     for completion in worldResp.completions:
         handleUFinished(session, completion)
             
@@ -298,8 +290,7 @@ def handlewResp(session, msg, fdW):
         handleUDeliveryMade(session, delivery)
 
     for truck in worldResp.truckstatus:
-        truck_new = handleTruck(truck)
-        CProtoUtil.send_SMade(truck_new)
+        handleTruck(session, truck)
 
     for err in worldResp.error:
         if err.seqnum not in wSeqNumSet:
@@ -321,11 +312,7 @@ def handleUFinished(session, completion):
         if completion.status == "ARRIVE WAREHOUSE":
             truck.status = TruckStatusEnum.arriveWH
             session.commit()
-            print(1)
-            print("Truck ID: ", completion.truckid)
-            print(truck.whid)
             AProtoUtil.send_UArrived(completion.truckid, truck.whid)
-            print(2)
         else:
             truck.status = TruckStatusEnum.idle
             session.commit()
@@ -343,7 +330,7 @@ def handleUDeliveryMade(session, delivery):
         package.status = PackageStatusEnum.complete
         session.commit()
         AProtoUtil.send_UDelivered(package.package_id)
-        #send_email(session, delivery.packageid)
+        send_email(session, delivery.packageid)
     
 
 '''
@@ -360,17 +347,19 @@ def handleAck(ack):
 @Arg    :
 @Return :
 '''
-def handleTruck(truck):
+def handleTruck(session, truck):
     if truck.seqnum not in wSeqNumSet:
         wSeqNumSet.add(truck.seqnum)
-        print(truck)
-        return truck
+        newtruck = session.query(Truck).filter_by(truck_id = truck.truckid).first()
+        newtruck.location_x = truck.x
+        newtruck.location_y = truck.y
+        session.commit()
+        
 
 def get_seqnum() -> int:
     server.seqLock.acquire()
     ans = server.seq
     server.seq += 1
-    print("@@@@@@@@@@@@@@@@@", server.seq)
     server.seqLock.release()
     return ans
 
@@ -382,7 +371,7 @@ def send_email(session, packageid):
     passw = '568zuoyezhenduo'
     to_email = str(package.email)
     
-    context = "Dear constomer:\n\nYour package " + str(packageid) + " has arrived, please check it through the detail link http://127.0.0.1:8000/detail/"+str(packageid)+"/!\n"\
+    context = "Dear constomer:\n\nYour package " + str(packageid) + " has arrived, please check it through the detail link http://127.0.0.1:8000/detail/"+str(packageid)+"/   !\n"\
                     + "If you have any question, please do not hesitate to contact us and give us feedback through http://127.0.0.1:8000/form/"+str(packageid)+"/. Enjoy your day!\n\nUPS service center"
 
     message = MIMEText(context, 'plain','utf-8')
@@ -396,6 +385,6 @@ def send_email(session, packageid):
         email_server.login(from_email, passw) 
         email_server.sendmail(from_email,to_email,message.as_string()) 
         email_server.quit() 
-        print('success')
+        print('email send success')
     except smtplib.SMTPException as e:
         print('error:',e)

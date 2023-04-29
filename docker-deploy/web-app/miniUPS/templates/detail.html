@@ -37,10 +37,13 @@
                   <li><b>Quantity:</b> &nbsp; {{package.item_num}}</li>
                   <li><b>Description:</b> &nbsp; {{package.item_desc}}</li>
               </ul>
-
-              {% endif%}
               {% if package.status != "complete" %}
               <a href="/changeLocation/{{ package.package_id }}">Change Delivery Destination</a>
+              {% endif %}
+              {% endif%}
+
+              {% if error %}
+              {{error}}
               {% endif %}
           </div>
         </div>

@@ -32,7 +32,7 @@ def query(request):
             else:
                 path = 'index.html'
             if package[0].status == "delivering":
-                curLoc = sendQuery(package_id)
+                curLoc = sendQuery(int(package_id))
                 content = package[0].dto()
                 content['curLoc'] = curLoc
                 return render(request, path, {'package': content})
@@ -125,11 +125,10 @@ def changeLoc(request, package_id):
         package = Package.objects.filter(package_id = package_id)
         if package:
             if package[0].status == "delivering":
-                sendLoc(package_id, location_x, location_y)
-            else:
-                package[0].location_x = location_x
-                package[0].location_y = location_y
-                package[0].save()
+                sendLoc(package_id, int(location_x), int(location_y))
+            package[0].location_x = location_x
+            package[0].location_y = location_y
+            package[0].save()
             return redirect('/detail/'+str(package_id), {'package': package[0].dto()})
         else:
             return render(request, 'form.html', {'form': form,'error':"package doesn't exist", 'name':'Change Desitination'})
@@ -140,8 +139,11 @@ def changeLoc(request, package_id):
 @login_required
 def detail(request, package_id):
     package = Package.objects.filter(package_id=package_id)
-    context = {'package': package[0].dto()}
-    return render(request, 'detail.html', context)
+    if package:
+        context = {'package': package[0].dto()}
+        return render(request, 'detail.html', context)
+    else:
+        return render(request, 'detail.html', {'error': "package doesn't exist"})
 
 def getSatisfaction(request, package_id):
     if request.method == 'POST':

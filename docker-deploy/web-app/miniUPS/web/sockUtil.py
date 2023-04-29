@@ -1,6 +1,9 @@
 import socket
+import threading
 from google.protobuf.internal.decoder import _DecodeVarint32
 from google.protobuf.internal.encoder import _EncodeVarint
+
+sockLock = threading.Lock()
 '''
 @Desc   : connect to a server by specify ip and port
 @Arg    : ip: address, port: port
@@ -24,10 +27,12 @@ def connectToServer(ip, port):
 @Return : void
 '''
 def send_msg(socketfd, msg):
-    print("send", msg)
+    sockLock.acquire()
     string_msg = msg.SerializeToString()
     _EncodeVarint(socketfd.send, len(string_msg), None)
     socketfd.sendall(string_msg)
+    sockLock.release()
+    print("send", msg)
 
 '''
 @Desc   : receive msg from specific socket
@@ -43,7 +48,8 @@ def recv_msg(socket):
             msg_len, new_pos = _DecodeVarint32(var_int_buff, 0)
             if new_pos != 0:
                 break
-        except:
+        except Exception as e:
+            print(e)
             whole_message = None
             return whole_message
     print("!message len", msg_len)

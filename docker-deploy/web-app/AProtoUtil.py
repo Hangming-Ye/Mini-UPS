@@ -10,10 +10,8 @@ from UProtoUtil import *
 @Return : proto object Acommand message
 '''
 def parseAMsg(msg):
-    print("received from amazon request", msg)
     amazonMsg = U2A.ACommand()
     amazonMsg.ParseFromString(msg)
-    print("parsed", amazonMsg)
     return amazonMsg
 
 
@@ -24,7 +22,7 @@ def parseAMsg(msg):
 '''
 def handleAMsg(session, AMsg, fdW):
     AMsg = parseAMsg(AMsg)
-    print("Parsed message", AMsg)
+    print("Received Message From Amazon: ", AMsg)
     for pickup in AMsg.pickups:
         handleAPickup(session, pickup, fdW)
         
@@ -59,8 +57,9 @@ def handleALoad(session, load):
     pack = session.query(Package).filter_by(package_id = load.packageid).one()
     pack.truck_id = load.truckid
     pack.status = PackageStatusEnum.loaded
-    print("loaded")
     session.commit()
+    print("package loaded")
+
 
 
 '''
@@ -74,8 +73,8 @@ def handleALoadComplete(session, loadComplete, fdW):
         truck = session.query(Truck).filter_by(truck_id = loadComplete.truckid).one()
         truck.status = TruckStatusEnum.idle
         session.commit()
-        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& change to idle due to no package")
     else:
+        print("load complete, ready to go delivery")
         send_UGoDeliver(session, fdW, loadComplete.truckid)
 
 def handleACreatePackage(session, createpck):
@@ -104,11 +103,11 @@ def send_UArrived(truckid, whid):
     arrived.truckid = truckid
     arrived.whid = whid
     arrived.seqnum = get_seqnum()
-    print(3, ucommand)
+    
     amazon_socket = connectToServer(server.AMZ_ADDR, server.AMZ_PORT)
     send_msg(amazon_socket, ucommand)
     amazon_socket.close()
-    print("Sent UCommand UArrived")
+    print("Sent UCommand UArrived", arrived)
 
 
 '''
@@ -124,7 +123,7 @@ def send_UDelivered(packageid):
     amazon_socket = connectToServer(server.AMZ_ADDR, server.AMZ_PORT)
     send_msg(amazon_socket, ucommand)
     amazon_socket.close()
-    print("Sent UCommand UDelivered")
+    print("Sent UCommand UDelivered", delivered)
 
 
 '''
@@ -142,4 +141,4 @@ def send_UError(err_code, msg):
     amazon_socket = connectToServer(server.AMZ_ADDR, server.AMZ_PORT)
     send_msg(amazon_socket, ucommand)
     amazon_socket.close()
-    print("Sent UCommand UError")
+    print("Sent UCommand UError", error)

@@ -14,7 +14,8 @@ WORLD_PORT = 12345
 AMZ_PORT = 11111
 UPS_PORT = 22222
 CLIENT_PORT = 33333
-AMZ_ADDR = "vcm-30971.vm.duke.edu"
+# AMZ_ADDR = "vcm-30971.vm.duke.edu"
+AMZ_ADDR = "vcm-32434.vm.duke.edu"
 TruckNum = 100
 threadPool = ThreadPoolExecutor(40)
 seq = 0
@@ -24,6 +25,7 @@ fdWLock = threading.Lock()
 ackLock = threading.Lock()
 waitlist = Queue()
 waitLock = threading.Lock()
+client_socket = socket.socket()
 
 def worldProcess(world_ip, world_port):
     while True:
@@ -52,12 +54,12 @@ def clientProcess(client_ip, client_port, fdW):
     sock.bind((client_ip, client_port))
     sock.listen(100)
     print("----Start Listen from Front-end at Port", client_port,"----")
-
+    global client_socket
     while True:
-        fdC, addr = sock.accept()
-        msg = recv_msg(fdC)
+        client_socket, addr = sock.accept()
+        msg = recv_msg(client_socket)
         if msg is None:
-            fdC.close()
+            client_socket.close()
         else:
             threadPool.submit(handlecReq, session_factory(), msg, fdW)
 
@@ -77,20 +79,10 @@ def server():
     amazon.start()
     client.start()
 
-    pack = Package(package_id = 10, status = PackageStatusEnum.created, location_x = 2, 
-                location_y = 2, email = "hy201@duke.edu", 
-                item_id = 1, item_num = 2, item_name = "milk", item_desc = "healthy, reduced fat")
-    pack2 = Package(package_id = 11, status = PackageStatusEnum.complete, location_x = 2, 
-                location_y = 2, email = "hy201@duke.edu", 
-                item_id = 1, item_num = 2, item_name = "apple", item_desc = "ugly and nanchide")
-    session_factory().add(pack)
-    session_factory().add(pack2)
-    session_factory().commit()
     world.join()
     amazon.join()
     client.join()
     fdW.close()
-
 
 if __name__ == "__main__":
     server()
